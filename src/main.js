@@ -7,7 +7,8 @@
         tileLayerOptions = {
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
             maxZoom: 18
-        };
+        },
+        addNewButton = document.getElementById('add-new-layer');
 
     L.tileLayer(urlTemplate, tileLayerOptions).addTo(map);
 
@@ -21,7 +22,6 @@
             featureGroup: drawnItems
         }
     });
-    map.addControl(drawControl);
 
     map.on('draw:created', function (e) {
         var type = e.layerType,
@@ -41,6 +41,11 @@
         layers.eachLayer(function (layer) {
             //do whatever you want, most likely save back to db
         });
+    });
+
+    // Show `Leaflet.draw` plugin controls only after click on `Add New` button
+    addNewButton.addEventListener('click', function(event) {
+        map.addControl(drawControl);
     });
 
 }(this));
