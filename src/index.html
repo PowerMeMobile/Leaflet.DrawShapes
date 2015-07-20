@@ -13,11 +13,21 @@
             width: 1000px;
             height: 500px;
         }
+        .show {
+            display: block;
+        }
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
     <div id="map" class="map"></div>
     <button title="Add new layer with simple shapes" id="add-new-layer">Add New</button>
+    <div id="layer-info" class="hidden">
+        <input id="layer-name" placeholder="Type layer name"/>
+        <button title="Save layer with simple shapes and entered name" id="save-layer">Save</button>
+    </div>
 
     <script type="text/javascript" src="../vendor/leaflet/dist/leaflet.js"></script>
     <script type="text/javascript" src="../vendor/leaflet.draw/dist/leaflet.draw.js"></script>

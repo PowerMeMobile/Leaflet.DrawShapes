@@ -8,7 +8,8 @@
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
             maxZoom: 18
         },
-        addNewButton = document.getElementById('add-new-layer');
+        addNewButton = document.getElementById('add-new-layer'),
+        saveLayerButton = document.getElementById('save-layer');
 
     L.tileLayer(urlTemplate, tileLayerOptions).addTo(map);
 
@@ -45,7 +46,40 @@
 
     // Show `Leaflet.draw` plugin controls only after click on `Add New` button
     addNewButton.addEventListener('click', function(event) {
+        // Add `Leaflet.draw` plugin controls to the map
         map.addControl(drawControl);
+
+        // Clear leary name
+        document.getElementById('layer-name').value = '';
+
+        // Show controls for enter layer info like name and save button
+        document.getElementById('layer-info').className = 'show';
+
+        // Disabled button for add new layer
+        addNewButton.disabled = true;
     });
+
+    saveLayerButton.addEventListener('click', function(event) {
+        var layerName = document.getElementById('layer-name').value;
+
+        if (layerName === '') {
+            alert('Please, enter name for layer!');
+
+            return;
+        }
+
+        // Main action with map layers here
+        //
+
+
+        // Clear and hide input with name
+        document.getElementById('layer-info').className = 'hidden';
+
+        // Remove `Leaflet.draw` plugin controls from the map
+        map.removeControl(drawControl);
+
+        // Activate new button
+        addNewButton.disabled = false;
+    })
 
 }(this));
