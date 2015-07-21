@@ -13,8 +13,8 @@
 
     L.tileLayer(urlTemplate, tileLayerOptions).addTo(map);
 
-    // Initialise the FeatureGroup to store editable layers
-    var drawnItems = new L.FeatureGroup();
+    // Initialise the GeoJson to store editable layers
+    var drawnItems = L.geoJson();
     map.addLayer(drawnItems);
 
     // Initialise the draw control and pass it the FeatureGroup of editable layers
