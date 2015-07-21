@@ -52,6 +52,9 @@
         // Clear leary name
         document.getElementById('layer-name').value = '';
 
+        // Clear shapes from layer
+        drawnItems.clearLayers();
+
         // Show controls for enter layer info like name and save button
         document.getElementById('layer-info').className = 'show';
 
