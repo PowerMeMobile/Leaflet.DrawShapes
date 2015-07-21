@@ -9,7 +9,8 @@
             maxZoom: 18
         },
         addNewButton = document.getElementById('add-new-layer'),
-        saveLayerButton = document.getElementById('save-layer');
+        saveLayerButton = document.getElementById('save-layer'),
+        layerList = [];
 
     L.tileLayer(urlTemplate, tileLayerOptions).addTo(map);
 
@@ -81,9 +82,9 @@
         // Main action with map layers here
         geoData.features[0].properties.name = layerName;
 
-        // Add new layer to select
+        // Add new layer to select and save to array
         var option = document.createElement('option');
-        option.dataset.geoData = geoData;
+        option.dataset.arrayIndex = layerList.push(geoData) - 1;
         option.innerHTML = layerName;
         option.selected = true;
         document.getElementById('layer-list').appendChild(option);
