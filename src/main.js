@@ -63,7 +63,8 @@
     });
 
     saveLayerButton.addEventListener('click', function(event) {
-        var layerName = document.getElementById('layer-name').value;
+        var layerName = document.getElementById('layer-name').value,
+            geoData = drawnItems.toGeoJSON();
 
         if (layerName === '') {
             alert('Please, enter name for layer!');
@@ -71,9 +72,21 @@
             return;
         }
 
-        // Main action with map layers here
-        //
+        if (geoData.features.length <= 0) {
+            alert('Please, add some shapes to layer!');
 
+            return;
+        }
+
+        // Main action with map layers here
+        geoData.features[0].properties.name = layerName;
+
+        // Add new layer to select
+        var option = document.createElement('option');
+        option.dataset.geoData = geoData;
+        option.innerHTML = layerName;
+        option.selected = true;
+        document.getElementById('layer-list').appendChild(option);
 
         // Clear and hide input with name
         document.getElementById('layer-info').className = 'hidden';
