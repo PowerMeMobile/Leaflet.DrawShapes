@@ -97,6 +97,19 @@
 
         // Activate new button
         addNewButton.disabled = false;
-    })
+    });
+
+    document.getElementById('layer-list').addEventListener('change', function(event) {
+        var selectedIndex = event.target.options.selectedIndex,
+            arrayIndex = event.target.options[selectedIndex].dataset.arrayIndex,
+            geoData = layerList[arrayIndex];
+
+        drawnItems.clearLayers();
+
+        if (geoData) {
+            drawnItems.addData(geoData);
+            console.log(geoData.features[0].name);
+        };
+    });
 
 }(this));
