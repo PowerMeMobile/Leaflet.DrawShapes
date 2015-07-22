@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var map = L.map('map').setView([51.505, -0.09], 13),
+    var map = L.map('map').setView([53.940334540000002, 27.614589129999999], 15),
         urlTemplate = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
         tileLayerOptions = {
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
