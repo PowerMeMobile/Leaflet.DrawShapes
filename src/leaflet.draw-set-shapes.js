@@ -36,6 +36,8 @@ L.DrawSetShapes.Toolbar = L.Class.extend({
         cloneTitle: 'Clone current layer'
     },
 
+    includes: L.Mixin.Events,
+
     initialize: function(options) {
         this.options = L.extend(this.options, options);
     },
