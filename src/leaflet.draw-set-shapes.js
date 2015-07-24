@@ -13,6 +13,11 @@ L.Control.DrawSetShapes = L.Control.extend({
         L.Control.prototype.initialize.call(this, options);
 
         this._toolbar = new L.DrawSetShapes.Toolbar(this.options);
+
+        this._toolbar.on('add:click', this._addLayer, this);
+        this._toolbar.on('save:click', this._saveLayer, this);
+        this._toolbar.on('edit:click', this._editLayer, this);
+        this._toolbar.on('clone:click', this._cloneLayer, this);
     },
 
     onAdd: function(map) {
@@ -23,6 +28,22 @@ L.Control.DrawSetShapes = L.Control.extend({
 
     onRemove: function(map) {
         // TODO: implement removeing DrawSetShapes control from map
+    },
+
+    _addLayer: function(event) {
+        // Create new layer
+    },
+
+    _saveLayer: function(event) {
+        // Save current layer
+    },
+
+    _editLayer: function(event) {
+        // Edit current layer
+    },
+
+    _cloneLayer: function(event) {
+        // Clone current layer
     }
 });
 
