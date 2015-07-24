@@ -48,34 +48,34 @@ L.DrawSetShapes.Toolbar = L.Class.extend({
 
         this._addLayerButton  = this._createButton(
                 this.options.addText, this.options.addTitle,
-                toolbarName + '-add',  container, this._addLayer,  this);
+                toolbarName + '-add',  container, this._addClick,  this);
         this._saveLayerButton = this._createButton(
                 this.options.saveText, this.options.saveTitle,
-                toolbarName + '-save', container, this._saveLayer, this);
+                toolbarName + '-save', container, this._saveClick, this);
         this._editLayerButton = this._createButton(
                 this.options.editText, this.options.editTitle,
-                toolbarName + '-edit', container, this._editLayer, this);
+                toolbarName + '-edit', container, this._editClick, this);
         this._cloneLayerButton = this._createButton(
                 this.options.cloneText, this.options.cloneTitle,
-                toolbarName + '-clone', container, this._cloneLayer, this);
+                toolbarName + '-clone', container, this._cloneClick, this);
 
         return container;
     },
 
-    _addLayer: function(e) {
-        console.log('Add button click', e);
+    _addClick: function(e) {
+        this.fire('add:click', e);
     },
 
-    _saveLayer: function(e) {
-        console.log('Save button click', e);
+    _saveClick: function(e) {
+        this.fire('save:click', e);
     },
 
-    _editLayer: function(e) {
-        console.log('Edit button click', e);
+    _editClick: function(e) {
+        this.fire('edit:click', e);
     },
 
-    _cloneLayer: function(e) {
-        console.log('Clone button click', e);
+    _cloneClick: function(e) {
+        this.fire('clone:click', e);
     },
 
     _createButton: function(html, title, className, container, fn, context) {
