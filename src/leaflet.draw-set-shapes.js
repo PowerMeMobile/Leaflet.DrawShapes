@@ -11,12 +11,14 @@ L.Control.DrawSetShapes = L.Control.extend({
 
     initialize: function(options) {
         L.Control.prototype.initialize.call(this, options);
+
+        this._toolbar = new L.DrawSetShapes.Toolbar(this.options);
     },
 
     onAdd: function(map) {
-        var toolbar = new L.DrawSetShapes.Toolbar(this.options);
+        var container = this._toolbar.addToolbar(map);
 
-        return toolbar.addToolbar(map);
+        return container;
     },
 
     onRemove: function(map) {
