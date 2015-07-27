@@ -23,6 +23,8 @@ L.Control.DrawSetShapes = L.Control.extend({
     onAdd: function(map) {
         var container = this._toolbar.addToolbar(map);
 
+        this._initializeDrawPlugin({});
+
         return container;
     },
 
@@ -44,6 +46,20 @@ L.Control.DrawSetShapes = L.Control.extend({
 
     _cloneLayer: function(event) {
         // Clone current layer
+    },
+
+    _initializeDrawPlugin: function(drawOptions) {
+        // Create editable layer for draw plugin
+        this._drawnShapes = L.geoJson();
+
+        this._map.addLayer(this._drawnShapes);
+
+        // Override edit options in draw plugin for editable layer
+        drawOptions.edit = {
+            featureGroup: this._drawnShapes
+        };
+
+        this._drawControl = new L.Control.Draw(drawOptions);
     }
 });
 
