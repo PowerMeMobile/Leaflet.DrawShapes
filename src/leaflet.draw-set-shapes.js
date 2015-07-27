@@ -18,6 +18,9 @@ L.Control.DrawSetShapes = L.Control.extend({
         this._toolbar.on('save:click', this._saveLayer, this);
         this._toolbar.on('edit:click', this._editLayer, this);
         this._toolbar.on('clone:click', this._cloneLayer, this);
+
+        // Create editable layer group for draw plugin
+        this._drawnShapes = L.geoJson();
     },
 
     onAdd: function(map) {
@@ -49,9 +52,6 @@ L.Control.DrawSetShapes = L.Control.extend({
     },
 
     _initializeDrawPlugin: function(drawOptions) {
-        // Create editable layer for draw plugin
-        this._drawnShapes = L.geoJson();
-
         this._map.addLayer(this._drawnShapes);
 
         // Override edit options in draw plugin for editable layer
