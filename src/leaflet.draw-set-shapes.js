@@ -54,12 +54,19 @@ L.Control.DrawSetShapes = L.Control.extend({
     _initializeDrawPlugin: function(drawOptions) {
         this._map.addLayer(this._drawnShapes);
 
-        // Override edit options in draw plugin for editable layer
+        // Override edit options in draw plugin for editable layer group
         drawOptions.edit = {
             featureGroup: this._drawnShapes
         };
 
         this._drawControl = new L.Control.Draw(drawOptions);
+
+        // Add layer with shape on event
+        this._map.on('draw:created', function (e) {
+            var layer = e.layer;
+
+            this._drawnShapes.addLayer(layer);
+        }, this);
     }
 });
 
