@@ -14,4 +14,24 @@
 
     L.tileLayer(urlTemplate, tileLayerOptions).addTo(map);
 
+    function pluginSaveCallback(geoJson) {
+
+        console.log('Received GeoJSON', geoJson);
+
+        var promise = new Promise(function(resolve, reject) {
+            setTimeout(function() {
+                console.log('Call resolve in save callback')
+                resolve();
+            }, 3000);
+        });
+
+        return promise;
+    };
+
+    // Initialize DrawSetShapes plugin
+    var plugin = new L.Control.DrawSetShapes({
+        onSave: pluginSaveCallback
+    });
+    plugin.addTo(map);
+
 }(this));
