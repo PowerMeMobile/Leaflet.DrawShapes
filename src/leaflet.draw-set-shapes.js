@@ -36,19 +36,23 @@ L.Control.DrawSetShapes = L.Control.extend({
     },
 
     _addLayer: function(event) {
-        // Create new layer
+        this._startEditLayers();
     },
 
     _saveLayer: function(event) {
-        // Save current layer
+        this._hideDrawPlugin();
     },
 
     _editLayer: function(event) {
-        // Edit current layer
+        var layers = this._currentLayersAsGeoJson();
+
+        this._startEditLayers(layers);
     },
 
     _cloneLayer: function(event) {
-        // Clone current layer
+        var layers = this._currentLayersAsGeoJson();
+
+        this._startEditLayers(layers);
     },
 
     _initializeDrawPlugin: function(drawOptions) {
@@ -67,6 +71,42 @@ L.Control.DrawSetShapes = L.Control.extend({
 
             this._drawnShapes.addLayer(layer);
         }, this);
+    },
+
+    _startEditLayers: function(layers) {
+        this._clearDrawnShapes();
+
+        if (layers) {
+            this._loadLayersAsGeoJson(layers);
+        };
+
+        this._showDrawPlugin();
+    },
+
+    _loadLayersAsGeoJson: function(layers) {
+        this._drawnShapes.addData(layers);
+    },
+
+    _currentLayersAsGeoJson: function() {
+        var layers;
+
+        if (this._drawnShapes.getLayers().length > 0) {
+            layers = this._drawnShapes.toGeoJSON();
+        };
+
+        return layers;
+    },
+
+    _showDrawPlugin: function() {
+        this._map.addControl(this._drawControl);
+    },
+
+    _hideDrawPlugin: function() {
+        this._map.removeControl(this._drawControl);
+    },
+
+    _clearDrawnShapes: function() {
+        this._drawnShapes.clearLayers();
     }
 });
 
