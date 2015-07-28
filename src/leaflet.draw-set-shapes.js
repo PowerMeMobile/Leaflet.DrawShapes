@@ -14,10 +14,10 @@ L.Control.DrawSetShapes = L.Control.extend({
 
         this._toolbar = new L.DrawSetShapes.Toolbar(this.options);
 
-        this._toolbar.on('add:click', this._addLayer, this);
-        this._toolbar.on('save:click', this._saveLayer, this);
-        this._toolbar.on('edit:click', this._editLayer, this);
-        this._toolbar.on('clone:click', this._cloneLayer, this);
+        this._toolbar.on('add:click', this._addLayers, this);
+        this._toolbar.on('save:click', this._saveLayers, this);
+        this._toolbar.on('edit:click', this._editLayers, this);
+        this._toolbar.on('clone:click', this._cloneLayers, this);
 
         // Create editable layer group for draw plugin
         this._drawnShapes = L.geoJson();
@@ -35,21 +35,21 @@ L.Control.DrawSetShapes = L.Control.extend({
         // TODO: implement removeing DrawSetShapes control from map
     },
 
-    _addLayer: function(event) {
+    _addLayers: function(event) {
         this._startEditLayers();
     },
 
-    _saveLayer: function(event) {
+    _saveLayers: function(event) {
         this._hideDrawPlugin();
     },
 
-    _editLayer: function(event) {
+    _editLayers: function(event) {
         var layers = this._currentLayersAsGeoJson();
 
         this._startEditLayers(layers);
     },
 
-    _cloneLayer: function(event) {
+    _cloneLayers: function(event) {
         var layers = this._currentLayersAsGeoJson();
 
         this._startEditLayers(layers);
