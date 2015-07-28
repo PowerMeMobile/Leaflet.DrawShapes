@@ -40,7 +40,23 @@ L.Control.DrawSetShapes = L.Control.extend({
     },
 
     _saveLayers: function(event) {
-        this._hideDrawPlugin();
+        var that = this,
+            callback = this.options.onSave;
+
+        if (callback !== undefined && typeof(callback) === 'function') { // Call callback if defined
+            var promise = callback(this._currentLayersAsGeoJson());
+
+            promise.then(function() {
+                    // Hide Draw plugin controls if external save is successfully
+                    that._hideDrawPlugin();
+                })
+                .catch(function(error) {
+                    // Log error after external save
+                    console.log('[Draw set shapes] error on save: ', error);
+                });
+        } else { // Just hide Draw plugin controls
+            this._hideDrawPlugin();
+        };
     },
 
     _editLayers: function(event) {
