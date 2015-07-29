@@ -18,6 +18,7 @@ L.Control.DrawSetShapes = L.Control.extend({
         this._toolbar.on('save:click', this._saveLayers, this);
         this._toolbar.on('edit:click', this._editLayers, this);
         this._toolbar.on('clone:click', this._cloneLayers, this);
+        this._toolbar.on('cancel:click', this._cancelEditing, this);
 
         // Create editable layer group for draw plugin
         this._drawnShapes = L.geoJson();
@@ -69,6 +70,10 @@ L.Control.DrawSetShapes = L.Control.extend({
         var layers = this._currentLayersAsGeoJson();
 
         this._startEditLayers(layers);
+    },
+
+    _cancelEditing: function(event) {
+        console.log('Cancel button has been pressed');
     },
 
     _initializeDrawPlugin: function(drawOptions) {
@@ -135,7 +140,9 @@ L.DrawSetShapes.Toolbar = L.Class.extend({
         editText: 'Edit',
         editTitle: 'Edit current layer',
         cloneText: 'Clone',
-        cloneTitle: 'Clone current layer'
+        cloneTitle: 'Clone current layer',
+        cancelText: 'Cancel',
+        cancelTitle: 'Cancel editing'
     },
 
     includes: L.Mixin.Events,
@@ -147,6 +154,9 @@ L.DrawSetShapes.Toolbar = L.Class.extend({
     addToolbar: function(map) {
         var container = this._createToolbar();
 
+        this._actionButtons = this._createActionButtons();
+
+        container.appendChild(this._actionButtons);
 
         return container;
     },
@@ -167,6 +177,10 @@ L.DrawSetShapes.Toolbar = L.Class.extend({
         this.fire('clone:click', e);
     },
 
+    _cancelClick: function(e) {
+        this.fire('cancel:click', e);
+    },
+
     _createToolbar: function() {
         // TODO: Decrease dependence from Draw plugin css classes
         var container = L.DomUtil.create('div', 'leaflet-draw-set-shapes leaflet-draw'),
@@ -176,9 +190,6 @@ L.DrawSetShapes.Toolbar = L.Class.extend({
         this._addLayersButton  = this._createButton(
                 this.options.addText, this.options.addTitle,
                 buttonName + '-add',  toolbarContainer, this._addClick,  this);
-        this._saveLayersButton = this._createButton(
-                this.options.saveText, this.options.saveTitle,
-                buttonName + '-save', toolbarContainer, this._saveClick, this);
         this._editLayersButton = this._createButton(
                 this.options.editText, this.options.editTitle,
                 buttonName + '-edit', toolbarContainer, this._editClick, this);
@@ -187,6 +198,20 @@ L.DrawSetShapes.Toolbar = L.Class.extend({
                 buttonName + '-clone', toolbarContainer, this._cloneClick, this);
 
         return container;
+    },
+
+    _createActionButtons: function() {
+        // TODO: Decrease dependence from Draw plugin css classes
+        var actionContainer = L.DomUtil.create('ul', 'leaflet-draw-actions'),
+            liCancel = L.DomUtil.create('li', '', actionContainer),
+            liSave = L.DomUtil.create('li', '', actionContainer);
+
+        this._cancelButton = this._createButton(this.options.cancelText,
+            this.options.cancelTitle, '', liCancel, this._cancelClick, this);
+        this._saveButton = this._createButton(this.options.saveText,
+            this.options.saveTitle, '', liSave, this._saveClick, this);
+
+        return actionContainer;
     },
 
     _createButton: function(html, title, className, container, fn, context) {
