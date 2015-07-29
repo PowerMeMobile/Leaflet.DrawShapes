@@ -145,21 +145,23 @@ L.DrawSetShapes.Toolbar = L.Class.extend({
     },
 
     addToolbar: function(map) {
-        var toolbarName = 'leaflet-control-draw-set-shapes',
-            container = L.DomUtil.create('div', toolbarName + ' leaflet-bar');
+        // TODO: Decrease dependence from Draw plugin css classes
+        var container = L.DomUtil.create('div', 'leaflet-draw-set-shapes leaflet-draw'),
+            toolbarContainer = L.DomUtil.create('div', 'leaflet-draw-set-shapes-toolbar leaflet-bar', container),
+            buttonName = 'leaflet-draw-set-shapes-button';
 
         this._addLayersButton  = this._createButton(
                 this.options.addText, this.options.addTitle,
-                toolbarName + '-add',  container, this._addClick,  this);
+                buttonName + '-add',  toolbarContainer, this._addClick,  this);
         this._saveLayersButton = this._createButton(
                 this.options.saveText, this.options.saveTitle,
-                toolbarName + '-save', container, this._saveClick, this);
+                buttonName + '-save', toolbarContainer, this._saveClick, this);
         this._editLayersButton = this._createButton(
                 this.options.editText, this.options.editTitle,
-                toolbarName + '-edit', container, this._editClick, this);
+                buttonName + '-edit', toolbarContainer, this._editClick, this);
         this._cloneLayersButton = this._createButton(
                 this.options.cloneText, this.options.cloneTitle,
-                toolbarName + '-clone', container, this._cloneClick, this);
+                buttonName + '-clone', toolbarContainer, this._cloneClick, this);
 
         return container;
     },
