@@ -148,16 +148,16 @@ L.DrawSetShapes.Toolbar = L.Class.extend({
         var toolbarName = 'leaflet-control-draw-set-shapes',
             container = L.DomUtil.create('div', toolbarName + ' leaflet-bar');
 
-        this._addLayerButton  = this._createButton(
+        this._addLayersButton  = this._createButton(
                 this.options.addText, this.options.addTitle,
                 toolbarName + '-add',  container, this._addClick,  this);
-        this._saveLayerButton = this._createButton(
+        this._saveLayersButton = this._createButton(
                 this.options.saveText, this.options.saveTitle,
                 toolbarName + '-save', container, this._saveClick, this);
-        this._editLayerButton = this._createButton(
+        this._editLayersButton = this._createButton(
                 this.options.editText, this.options.editTitle,
                 toolbarName + '-edit', container, this._editClick, this);
-        this._cloneLayerButton = this._createButton(
+        this._cloneLayersButton = this._createButton(
                 this.options.cloneText, this.options.cloneTitle,
                 toolbarName + '-clone', container, this._cloneClick, this);
 
