@@ -145,6 +145,29 @@ L.DrawSetShapes.Toolbar = L.Class.extend({
     },
 
     addToolbar: function(map) {
+        var container = this._createToolbar();
+
+
+        return container;
+    },
+
+    _addClick: function(e) {
+        this.fire('add:click', e);
+    },
+
+    _saveClick: function(e) {
+        this.fire('save:click', e);
+    },
+
+    _editClick: function(e) {
+        this.fire('edit:click', e);
+    },
+
+    _cloneClick: function(e) {
+        this.fire('clone:click', e);
+    },
+
+    _createToolbar: function() {
         // TODO: Decrease dependence from Draw plugin css classes
         var container = L.DomUtil.create('div', 'leaflet-draw-set-shapes leaflet-draw'),
             toolbarContainer = L.DomUtil.create('div', 'leaflet-draw-set-shapes-toolbar leaflet-bar', container),
@@ -164,22 +187,6 @@ L.DrawSetShapes.Toolbar = L.Class.extend({
                 buttonName + '-clone', toolbarContainer, this._cloneClick, this);
 
         return container;
-    },
-
-    _addClick: function(e) {
-        this.fire('add:click', e);
-    },
-
-    _saveClick: function(e) {
-        this.fire('save:click', e);
-    },
-
-    _editClick: function(e) {
-        this.fire('edit:click', e);
-    },
-
-    _cloneClick: function(e) {
-        this.fire('clone:click', e);
     },
 
     _createButton: function(html, title, className, container, fn, context) {
