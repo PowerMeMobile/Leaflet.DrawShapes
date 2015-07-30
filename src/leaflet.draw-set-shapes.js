@@ -38,25 +38,32 @@ L.Control.DrawSetShapes = L.Control.extend({
 
     _addLayers: function(event) {
         this._startEditLayers();
+        this._changeToolbarState(this._toolbar.states.add);
     },
 
     _saveLayers: function(event) {
         var that = this,
             callback = this.options.onSave;
 
+        this._changeToolbarState(this._toolbar.states.save);
+        this._finishEditing();
+
         if (callback !== undefined && typeof(callback) === 'function') { // Call callback if defined
             var promise = callback(this._currentLayersAsGeoJson());
 
             promise.then(function() {
-                    // Hide Draw plugin controls if external save is successfully
-                    that._hideDrawPlugin();
+                    that._changeToolbarState(that._toolbar.states.none);
                 })
                 .catch(function(error) {
                     // Log error after external save
                     console.log('[Draw set shapes] error on save: ', error);
+
+                    // Return to edit state in case some error on save
+                    that._changeToolbarState(that._toolbar.states.edit);
+                    that._startEditLayers(that._currentLayersAsGeoJson());
                 });
-        } else { // Just hide Draw plugin controls
-            this._hideDrawPlugin();
+        } else {
+            this._changeToolbarState(this._toolbar.states.none);
         };
     },
 
@@ -64,16 +71,21 @@ L.Control.DrawSetShapes = L.Control.extend({
         var layers = this._currentLayersAsGeoJson();
 
         this._startEditLayers(layers);
+        this._changeToolbarState(this._toolbar.states.edit);
     },
 
     _cloneLayers: function(event) {
         var layers = this._currentLayersAsGeoJson();
 
         this._startEditLayers(layers);
+        this._changeToolbarState(this._toolbar.states.clone);
     },
 
     _cancelEditing: function(event) {
-        console.log('Cancel button has been pressed');
+        //TODO: Implement restoring layers from backup
+
+        this._finishEditing();
+        this._changeToolbarState(this._toolbar.states.none);
     },
 
     _initializeDrawPlugin: function(drawOptions) {
@@ -122,12 +134,22 @@ L.Control.DrawSetShapes = L.Control.extend({
         this._map.addControl(this._drawControl);
     },
 
+    _finishEditing: function() {
+        this._hideDrawPlugin();
+
+        // TODO: implement clearing backup with layers
+    },
+
     _hideDrawPlugin: function() {
         this._map.removeControl(this._drawControl);
     },
 
     _clearDrawnShapes: function() {
         this._drawnShapes.clearLayers();
+    },
+
+    _changeToolbarState: function(state) {
+        this._toolbar.fire('change:state', {state: state});
     }
 });
 
@@ -145,10 +167,22 @@ L.DrawSetShapes.Toolbar = L.Class.extend({
         cancelTitle: 'Cancel editing'
     },
 
+    states: {
+        add: 'ADD',
+        edit: 'EDIT',
+        clone: 'CLONE',
+        save: 'SAVE',
+        none: 'NONE'
+    },
+
     includes: L.Mixin.Events,
 
     initialize: function(options) {
         this.options = L.extend(this.options, options);
+
+        this._currentState = this.states.none;
+
+        this.on('change:state', this._changeState, this);
     },
 
     addToolbar: function(map) {
@@ -162,23 +196,93 @@ L.DrawSetShapes.Toolbar = L.Class.extend({
     },
 
     _addClick: function(e) {
-        this.fire('add:click', e);
+        if (this._currentState === this.states.none) {
+            this.fire('add:click', e);
+        };
     },
 
     _saveClick: function(e) {
-        this.fire('save:click', e);
+        if (this._currentState !== this.states.save) {
+            this.fire('save:click', e);
+        };
     },
 
     _editClick: function(e) {
-        this.fire('edit:click', e);
+        if (this._currentState === this.states.none) {
+            this.fire('edit:click', e);
+        };
     },
 
     _cloneClick: function(e) {
-        this.fire('clone:click', e);
+        if (this._currentState === this.states.none) {
+            this.fire('clone:click', e);
+        };
     },
 
     _cancelClick: function(e) {
         this.fire('cancel:click', e);
+    },
+
+    _changeState: function(e) {
+        var state = this._currentState = e.state;
+
+        switch (state) {
+            case this.states.add:
+                L.DomUtil.removeClass(this._addLayersButton, 'leaflet-disabled');
+                L.DomUtil.addClass(this._editLayersButton, 'leaflet-disabled');
+                L.DomUtil.addClass(this._cloneLayersButton, 'leaflet-disabled');
+                this._showActionButtons(state);
+                break;
+            case this.states.edit:
+                L.DomUtil.removeClass(this._editLayersButton, 'leaflet-disabled');
+                L.DomUtil.addClass(this._addLayersButton, 'leaflet-disabled');
+                L.DomUtil.addClass(this._cloneLayersButton, 'leaflet-disabled');
+                this._showActionButtons(state);
+                break;
+            case this.states.clone:
+                L.DomUtil.removeClass(this._cloneLayersButton, 'leaflet-disabled');
+                L.DomUtil.addClass(this._addLayersButton, 'leaflet-disabled');
+                L.DomUtil.addClass(this._editLayersButton, 'leaflet-disabled');
+                this._showActionButtons(state);
+                break;
+            case this.states.save:
+                L.DomUtil.addClass(this._addLayersButton, 'leaflet-disabled');
+                L.DomUtil.addClass(this._editLayersButton, 'leaflet-disabled');
+                L.DomUtil.addClass(this._cloneLayersButton, 'leaflet-disabled');
+                this._hideActionButtons();
+                break;
+            case this.states.none:
+                L.DomUtil.removeClass(this._addLayersButton, 'leaflet-disabled');
+                L.DomUtil.removeClass(this._editLayersButton, 'leaflet-disabled');
+                L.DomUtil.removeClass(this._cloneLayersButton, 'leaflet-disabled');
+                this._hideActionButtons();
+        };
+    },
+
+    _showActionButtons: function(state) {
+        var top = this._getActionButtonsPosition(state);
+
+        this._actionButtons.style.top = top;
+        this._actionButtons.style.display = 'block';
+    },
+
+    _hideActionButtons: function() {
+        this._actionButtons.style.display = 'none';
+    },
+
+    _getActionButtonsPosition: function(state) {
+        var top;
+
+        switch (state) {
+            case this.states.add: top = this._addLayersButton.offsetTop - 1;
+                break;
+            case this.states.edit: top = this._editLayersButton.offsetTop - 1;
+                break;
+            case this.states.clone: top = this._cloneLayersButton.offsetTop - 1;
+                break;
+        };
+
+        return top + 'px';
     },
 
     _createToolbar: function() {
