@@ -36,6 +36,17 @@ L.Control.DrawSetShapes = L.Control.extend({
         // TODO: implement removeing DrawSetShapes control from map
     },
 
+    /**
+    * Load to the map layers from GeoJSON.
+    *
+    * @param {object} data - The GeoJSON data.
+    * @see {@link http://geojson.org|GeoJSON specification}
+    */
+    loadData: function(data) {
+        this._clearDrawnShapes();
+        this._loadLayersAsGeoJson(data);
+    },
+
     _addLayers: function(event) {
         this._startEditLayers();
         this._changeToolbarState(this._toolbar.states.add);
