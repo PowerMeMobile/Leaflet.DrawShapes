@@ -1,0 +1,13 @@
+
+/* Set images for toolbar buttons */
+.leaflet-draw-set-shapes-button-add {
+    background-image: url('images/add.png');
+}
+
+.leaflet-draw-set-shapes-button-edit {
+    background-image: url('images/edit.png');
+}
+
+.leaflet-draw-set-shapes-button-clone {
+    background-image: url('images/clone.png');
+}

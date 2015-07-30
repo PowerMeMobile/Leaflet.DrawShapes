@@ -155,13 +155,13 @@ L.Control.DrawSetShapes = L.Control.extend({
 
 L.DrawSetShapes.Toolbar = L.Class.extend({
     options: {
-        addText: 'Add',
+        addText: '',
         addTitle:'Add new layer with sahapes',
         saveText: 'Save',
         saveTitle: 'Save current layer',
-        editText: 'Edit',
+        editText: '',
         editTitle: 'Edit current layer',
-        cloneText: 'Clone',
+        cloneText: '',
         cloneTitle: 'Clone current layer',
         cancelText: 'Cancel',
         cancelTitle: 'Cancel editing'
