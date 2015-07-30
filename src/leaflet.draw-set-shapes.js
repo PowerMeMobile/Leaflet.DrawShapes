@@ -129,6 +129,13 @@ L.Control.DrawSetShapes = L.Control.extend({
 
     _loadLayersAsGeoJson: function(layers) {
         this._drawnShapes.addData(layers);
+        this._adjustMapBoundsToLayers(this._drawnShapes);
+    },
+
+    _adjustMapBoundsToLayers: function(layers) {
+        var bounds = layers.getBounds();
+
+        this._map.fitBounds(bounds);
     },
 
     _currentLayersAsGeoJson: function() {
