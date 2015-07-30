@@ -310,10 +310,10 @@ L.DrawSetShapes.Toolbar = L.Class.extend({
             liCancel = L.DomUtil.create('li', '', actionContainer),
             liSave = L.DomUtil.create('li', '', actionContainer);
 
-        this._cancelButton = this._createButton(this.options.cancelText,
-            this.options.cancelTitle, '', liCancel, this._cancelClick, this);
         this._saveButton = this._createButton(this.options.saveText,
             this.options.saveTitle, '', liSave, this._saveClick, this);
+        this._cancelButton = this._createButton(this.options.cancelText,
+            this.options.cancelTitle, '', liCancel, this._cancelClick, this);
 
         return actionContainer;
     },
