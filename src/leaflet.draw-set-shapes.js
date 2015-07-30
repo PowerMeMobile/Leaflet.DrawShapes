@@ -18,6 +18,7 @@ L.Control.DrawSetShapes = L.Control.extend({
         this._toolbar.on('save:click', this._saveLayers, this);
         this._toolbar.on('edit:click', this._editLayers, this);
         this._toolbar.on('clone:click', this._cloneLayers, this);
+        this._toolbar.on('cancel:click', this._cancelEditing, this);
 
         // Create editable layer group for draw plugin
         this._drawnShapes = L.geoJson();
@@ -37,25 +38,32 @@ L.Control.DrawSetShapes = L.Control.extend({
 
     _addLayers: function(event) {
         this._startEditLayers();
+        this._changeToolbarState(this._toolbar.states.add);
     },
 
     _saveLayers: function(event) {
         var that = this,
             callback = this.options.onSave;
 
+        this._changeToolbarState(this._toolbar.states.save);
+        this._finishEditing();
+
         if (callback !== undefined && typeof(callback) === 'function') { // Call callback if defined
             var promise = callback(this._currentLayersAsGeoJson());
 
             promise.then(function() {
-                    // Hide Draw plugin controls if external save is successfully
-                    that._hideDrawPlugin();
+                    that._changeToolbarState(that._toolbar.states.none);
                 })
                 .catch(function(error) {
                     // Log error after external save
                     console.log('[Draw set shapes] error on save: ', error);
+
+                    // Return to edit state in case some error on save
+                    that._changeToolbarState(that._toolbar.states.edit);
+                    that._startEditLayers(that._currentLayersAsGeoJson());
                 });
-        } else { // Just hide Draw plugin controls
-            this._hideDrawPlugin();
+        } else {
+            this._changeToolbarState(this._toolbar.states.none);
         };
     },
 
@@ -63,12 +71,21 @@ L.Control.DrawSetShapes = L.Control.extend({
         var layers = this._currentLayersAsGeoJson();
 
         this._startEditLayers(layers);
+        this._changeToolbarState(this._toolbar.states.edit);
     },
 
     _cloneLayers: function(event) {
         var layers = this._currentLayersAsGeoJson();
 
         this._startEditLayers(layers);
+        this._changeToolbarState(this._toolbar.states.clone);
+    },
+
+    _cancelEditing: function(event) {
+        //TODO: Implement restoring layers from backup
+
+        this._finishEditing();
+        this._changeToolbarState(this._toolbar.states.none);
     },
 
     _initializeDrawPlugin: function(drawOptions) {
@@ -117,12 +134,22 @@ L.Control.DrawSetShapes = L.Control.extend({
         this._map.addControl(this._drawControl);
     },
 
+    _finishEditing: function() {
+        this._hideDrawPlugin();
+
+        // TODO: implement clearing backup with layers
+    },
+
     _hideDrawPlugin: function() {
         this._map.removeControl(this._drawControl);
     },
 
     _clearDrawnShapes: function() {
         this._drawnShapes.clearLayers();
+    },
+
+    _changeToolbarState: function(state) {
+        this._toolbar.fire('change:state', {state: state});
     }
 });
 
@@ -135,49 +162,160 @@ L.DrawSetShapes.Toolbar = L.Class.extend({
         editText: 'Edit',
         editTitle: 'Edit current layer',
         cloneText: 'Clone',
-        cloneTitle: 'Clone current layer'
+        cloneTitle: 'Clone current layer',
+        cancelText: 'Cancel',
+        cancelTitle: 'Cancel editing'
+    },
+
+    states: {
+        add: 'ADD',
+        edit: 'EDIT',
+        clone: 'CLONE',
+        save: 'SAVE',
+        none: 'NONE'
     },
 
     includes: L.Mixin.Events,
 
     initialize: function(options) {
         this.options = L.extend(this.options, options);
+
+        this._currentState = this.states.none;
+
+        this.on('change:state', this._changeState, this);
     },
 
     addToolbar: function(map) {
-        var toolbarName = 'leaflet-control-draw-set-shapes',
-            container = L.DomUtil.create('div', toolbarName + ' leaflet-bar');
+        var container = this._createToolbar();
 
-        this._addLayerButton  = this._createButton(
-                this.options.addText, this.options.addTitle,
-                toolbarName + '-add',  container, this._addClick,  this);
-        this._saveLayerButton = this._createButton(
-                this.options.saveText, this.options.saveTitle,
-                toolbarName + '-save', container, this._saveClick, this);
-        this._editLayerButton = this._createButton(
-                this.options.editText, this.options.editTitle,
-                toolbarName + '-edit', container, this._editClick, this);
-        this._cloneLayerButton = this._createButton(
-                this.options.cloneText, this.options.cloneTitle,
-                toolbarName + '-clone', container, this._cloneClick, this);
+        this._actionButtons = this._createActionButtons();
+
+        container.appendChild(this._actionButtons);
 
         return container;
     },
 
     _addClick: function(e) {
-        this.fire('add:click', e);
+        if (this._currentState === this.states.none) {
+            this.fire('add:click', e);
+        };
     },
 
     _saveClick: function(e) {
-        this.fire('save:click', e);
+        if (this._currentState !== this.states.save) {
+            this.fire('save:click', e);
+        };
     },
 
     _editClick: function(e) {
-        this.fire('edit:click', e);
+        if (this._currentState === this.states.none) {
+            this.fire('edit:click', e);
+        };
     },
 
     _cloneClick: function(e) {
-        this.fire('clone:click', e);
+        if (this._currentState === this.states.none) {
+            this.fire('clone:click', e);
+        };
+    },
+
+    _cancelClick: function(e) {
+        this.fire('cancel:click', e);
+    },
+
+    _changeState: function(e) {
+        var state = this._currentState = e.state;
+
+        switch (state) {
+            case this.states.add:
+                L.DomUtil.removeClass(this._addLayersButton, 'leaflet-disabled');
+                L.DomUtil.addClass(this._editLayersButton, 'leaflet-disabled');
+                L.DomUtil.addClass(this._cloneLayersButton, 'leaflet-disabled');
+                this._showActionButtons(state);
+                break;
+            case this.states.edit:
+                L.DomUtil.removeClass(this._editLayersButton, 'leaflet-disabled');
+                L.DomUtil.addClass(this._addLayersButton, 'leaflet-disabled');
+                L.DomUtil.addClass(this._cloneLayersButton, 'leaflet-disabled');
+                this._showActionButtons(state);
+                break;
+            case this.states.clone:
+                L.DomUtil.removeClass(this._cloneLayersButton, 'leaflet-disabled');
+                L.DomUtil.addClass(this._addLayersButton, 'leaflet-disabled');
+                L.DomUtil.addClass(this._editLayersButton, 'leaflet-disabled');
+                this._showActionButtons(state);
+                break;
+            case this.states.save:
+                L.DomUtil.addClass(this._addLayersButton, 'leaflet-disabled');
+                L.DomUtil.addClass(this._editLayersButton, 'leaflet-disabled');
+                L.DomUtil.addClass(this._cloneLayersButton, 'leaflet-disabled');
+                this._hideActionButtons();
+                break;
+            case this.states.none:
+                L.DomUtil.removeClass(this._addLayersButton, 'leaflet-disabled');
+                L.DomUtil.removeClass(this._editLayersButton, 'leaflet-disabled');
+                L.DomUtil.removeClass(this._cloneLayersButton, 'leaflet-disabled');
+                this._hideActionButtons();
+        };
+    },
+
+    _showActionButtons: function(state) {
+        var top = this._getActionButtonsPosition(state);
+
+        this._actionButtons.style.top = top;
+        this._actionButtons.style.display = 'block';
+    },
+
+    _hideActionButtons: function() {
+        this._actionButtons.style.display = 'none';
+    },
+
+    _getActionButtonsPosition: function(state) {
+        var top;
+
+        switch (state) {
+            case this.states.add: top = this._addLayersButton.offsetTop - 1;
+                break;
+            case this.states.edit: top = this._editLayersButton.offsetTop - 1;
+                break;
+            case this.states.clone: top = this._cloneLayersButton.offsetTop - 1;
+                break;
+        };
+
+        return top + 'px';
+    },
+
+    _createToolbar: function() {
+        // TODO: Decrease dependence from Draw plugin css classes
+        var container = L.DomUtil.create('div', 'leaflet-draw-set-shapes leaflet-draw'),
+            toolbarContainer = L.DomUtil.create('div', 'leaflet-draw-set-shapes-toolbar leaflet-bar', container),
+            buttonName = 'leaflet-draw-set-shapes-button';
+
+        this._addLayersButton  = this._createButton(
+                this.options.addText, this.options.addTitle,
+                buttonName + '-add',  toolbarContainer, this._addClick,  this);
+        this._editLayersButton = this._createButton(
+                this.options.editText, this.options.editTitle,
+                buttonName + '-edit', toolbarContainer, this._editClick, this);
+        this._cloneLayersButton = this._createButton(
+                this.options.cloneText, this.options.cloneTitle,
+                buttonName + '-clone', toolbarContainer, this._cloneClick, this);
+
+        return container;
+    },
+
+    _createActionButtons: function() {
+        // TODO: Decrease dependence from Draw plugin css classes
+        var actionContainer = L.DomUtil.create('ul', 'leaflet-draw-actions'),
+            liCancel = L.DomUtil.create('li', '', actionContainer),
+            liSave = L.DomUtil.create('li', '', actionContainer);
+
+        this._saveButton = this._createButton(this.options.saveText,
+            this.options.saveTitle, '', liSave, this._saveClick, this);
+        this._cancelButton = this._createButton(this.options.cancelText,
+            this.options.cancelTitle, '', liCancel, this._cancelClick, this);
+
+        return actionContainer;
     },
 
     _createButton: function(html, title, className, container, fn, context) {
