@@ -20,6 +20,7 @@
     function pluginSaveCallback(geoJson) {
 
         console.log('Received GeoJSON', geoJson);
+        console.log('Received GeoJSON as string:', JSON.stringify(geoJson));
 
         var promise = new Promise(function(resolve, reject) {
             if (saveNewZoneToList(geoJson)) {
