@@ -9,6 +9,12 @@ L.Control.DrawSetShapes = L.Control.extend({
         position: 'topleft',
     },
 
+    modes: {
+        editing: 'EDITING',
+        creating: 'CREATING',
+        none: 'NONE'
+    },
+
     initialize: function(options) {
         L.Control.prototype.initialize.call(this, options);
 
@@ -22,6 +28,8 @@ L.Control.DrawSetShapes = L.Control.extend({
 
         // Create editable layer group for draw plugin
         this._drawnShapes = L.geoJson();
+
+        this._mode = this.modes.none;
     },
 
     onAdd: function(map) {
@@ -56,6 +64,8 @@ L.Control.DrawSetShapes = L.Control.extend({
     },
 
     _addLayers: function(event) {
+        this._mode = this.modes.creating;
+
         this._startEditLayers();
         this._changeToolbarState(this._toolbar.states.add);
     },
@@ -72,6 +82,7 @@ L.Control.DrawSetShapes = L.Control.extend({
 
             promise.then(function() {
                     that._changeToolbarState(that._toolbar.states.none);
+                    that._mode = that.modes.none;
                 })
                 .catch(function(error) {
                     // Log error after external save
@@ -83,11 +94,14 @@ L.Control.DrawSetShapes = L.Control.extend({
                 });
         } else {
             this._changeToolbarState(this._toolbar.states.none);
+            this._mode = this.modes.none;
         };
     },
 
     _editLayers: function(event) {
         var layers = this._currentLayersAsGeoJson();
+
+        this._mode = this.modes.editing;
 
         this._startEditLayers(layers);
         this._changeToolbarState(this._toolbar.states.edit);
@@ -95,6 +109,8 @@ L.Control.DrawSetShapes = L.Control.extend({
 
     _cloneLayers: function(event) {
         var layers = this._currentLayersAsGeoJson();
+
+        this._mode = this.modes.creating;
 
         this._startEditLayers(layers);
         this._changeToolbarState(this._toolbar.states.clone);
@@ -105,6 +121,7 @@ L.Control.DrawSetShapes = L.Control.extend({
 
         this._finishEditing();
         this._changeToolbarState(this._toolbar.states.none);
+        this._mode = this.modes.none;
     },
 
     _initializeDrawPlugin: function(drawOptions) {
