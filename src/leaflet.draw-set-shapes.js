@@ -76,7 +76,7 @@ L.Control.DrawSetShapes = L.Control.extend({
             isNew = this._mode === this.modes.creating;
 
         this._changeToolbarState(this._toolbar.states.save);
-        this._finishEditing();
+        this._hideDrawPlugin();
 
         if (callback !== undefined && typeof(callback) === 'function') { // Call callback if defined
             var promise = callback(this._currentLayersAsGeoJson(), isNew);
@@ -176,6 +176,7 @@ L.Control.DrawSetShapes = L.Control.extend({
 
     _showDrawPlugin: function() {
         this._map.addControl(this._drawControl);
+        this._drawControlShowed = true;
     },
 
     _finishEditing: function() {
@@ -185,7 +186,11 @@ L.Control.DrawSetShapes = L.Control.extend({
     },
 
     _hideDrawPlugin: function() {
-        this._map.removeControl(this._drawControl);
+        // TODO: optimize this because impossible remove control that has been deleted!
+        if (this._drawControlShowed) {
+            this._map.removeControl(this._drawControl);
+            this._drawControlShowed = false;
+        };
     },
 
     _clearDrawnShapes: function() {
