@@ -17,10 +17,11 @@
 
     L.tileLayer(urlTemplate, tileLayerOptions).addTo(map);
 
-    function pluginSaveCallback(geoJson) {
+    function pluginSaveCallback(geoJson, isNew) {
 
         console.log('Received GeoJSON', geoJson);
         console.log('Received GeoJSON as string:', JSON.stringify(geoJson));
+        console.log('is new:', isNew);
 
         var promise = new Promise(function(resolve, reject) {
             if (saveNewZoneToList(geoJson)) {
