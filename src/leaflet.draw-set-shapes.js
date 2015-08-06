@@ -43,8 +43,16 @@ L.Control.DrawSetShapes = L.Control.extend({
     * @see {@link http://geojson.org|GeoJSON specification}
     */
     loadData: function(data) {
-        this._clearDrawnShapes();
+        this.clearData();
         this._loadLayersAsGeoJson(data);
+    },
+
+    /**
+    * Clear drawn shapes from map and call cancel event.
+    */
+    clearData: function() {
+        this._clearDrawnShapes();
+        this._cancelEditing();
     },
 
     _addLayers: function(event) {
