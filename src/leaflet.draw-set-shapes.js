@@ -72,13 +72,14 @@ L.Control.DrawSetShapes = L.Control.extend({
 
     _saveLayers: function(event) {
         var that = this,
-            callback = this.options.onSave;
+            callback = this.options.onSave,
+            isNew = this._mode === this.modes.creating;
 
         this._changeToolbarState(this._toolbar.states.save);
         this._finishEditing();
 
         if (callback !== undefined && typeof(callback) === 'function') { // Call callback if defined
-            var promise = callback(this._currentLayersAsGeoJson());
+            var promise = callback(this._currentLayersAsGeoJson(), isNew);
 
             promise.then(function() {
                     that._changeToolbarState(that._toolbar.states.none);
