@@ -5,8 +5,8 @@
 L.DrawSetShapes = {};
 
 L.Control.DrawSetShapes = L.Control.extend({
-    options: {
-        position: 'topleft',
+    defaultOptions: {
+        position: 'topleft'
     },
 
     modes: {
@@ -15,10 +15,15 @@ L.Control.DrawSetShapes = L.Control.extend({
         none: 'NONE'
     },
 
-    initialize: function(options) {
-        L.Control.prototype.initialize.call(this, options);
+    initialize: function(opts) {
+        L.Control.prototype.initialize.call(this, opts);
+
+        this.options = L.extend(this.defaultOptions, opts)
 
         this._toolbar = new L.DrawSetShapes.Toolbar(this.options);
+
+        // Override position for draw plugin is same as for us plugin.
+        opts.drawOptions.position = this.options.position;
 
         this._toolbar.on('add:click', this._addLayers, this);
         this._toolbar.on('save:click', this._saveLayers, this);
@@ -26,16 +31,13 @@ L.Control.DrawSetShapes = L.Control.extend({
         this._toolbar.on('clone:click', this._cloneLayers, this);
         this._toolbar.on('cancel:click', this._cancelEditing, this);
 
-        // Create editable layer group for draw plugin
-        this._drawnShapes = L.geoJson();
-
         this._mode = this.modes.none;
     },
 
     onAdd: function(map) {
         var container = this._toolbar.addToolbar(map);
 
-        this._initializeDrawPlugin({});
+        this._initializeDrawPlugin(this.options.drawOptions || {});
 
         return container;
     },
@@ -125,15 +127,17 @@ L.Control.DrawSetShapes = L.Control.extend({
         this._mode = this.modes.none;
     },
 
-    _initializeDrawPlugin: function(drawOptions) {
-        this._map.addLayer(this._drawnShapes);
+    _initializeDrawPlugin: function(opts) {
 
-        // Override edit options in draw plugin for editable layer group
-        drawOptions.edit = {
-            featureGroup: this._drawnShapes
+        if (opts.draw && opts.draw.edit) {
+            this._drawnShapes = opts.draw.edit.featureGroup || new L.geoJson();
+        } else {
+            this._drawnShapes = new L.geoJson();
         };
 
-        this._drawControl = new L.Control.Draw(drawOptions);
+        this._map.addLayer(this._drawnShapes);
+
+        this._drawControl = new L.Control.Draw(opts);
 
         // Add layer with shape on event
         this._map.on('draw:created', function (e) {

@@ -86,9 +86,18 @@
         };
     });
 
+    var drawOptions = {
+        draw: {
+            polyline: false,
+            circle: false,
+            marker: false
+        }
+    }
+
     // Initialize DrawSetShapes plugin
     var plugin = new L.Control.DrawSetShapes({
-        onSave: pluginSaveCallback
+        onSave: pluginSaveCallback,
+        drawOptions: drawOptions
     });
     plugin.addTo(map);
 
