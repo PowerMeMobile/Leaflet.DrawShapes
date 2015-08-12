@@ -1,8 +1,15 @@
+/*
+* Leaflet.drawSetShapes, a plugin that allow draw different shapes with using
+* Leaflet.draw plugin and save layers as GeoJSON data.
+* (c) https://github.com/PowerMeMobile/
+*/
 (function(window, document, undefined) {
 
 'use strict';
 
 L.DrawSetShapes = {};
+
+L.DrawSetShapes.version = '0.0.1';
 
 L.Control.DrawSetShapes = L.Control.extend({
     defaultOptions: {
