@@ -1,6 +1,6 @@
 {
   "name": "powerads-map",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Component for showing map and editing regions for sending",
   "main": "index.js",
   "scripts": {
