@@ -136,10 +136,11 @@ L.Control.DrawSetShapes = L.Control.extend({
 
     _initializeDrawPlugin: function(opts) {
 
-        if (opts.draw && opts.draw.edit) {
-            this._drawnShapes = opts.draw.edit.featureGroup || new L.geoJson();
+        if (opts.edit && opts.edit.featureGroup) {
+            this._drawnShapes = opts.edit.featureGroup;
         } else {
-            this._drawnShapes = new L.geoJson();
+            opts.edit = opts.edit || {};
+            opts.edit.featureGroup = this._drawnShapes = new L.geoJson();
         };
 
         this._map.addLayer(this._drawnShapes);
