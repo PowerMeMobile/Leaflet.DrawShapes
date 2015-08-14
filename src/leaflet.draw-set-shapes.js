@@ -243,7 +243,7 @@ L.DrawSetShapes.Toolbar = L.Class.extend({
     includes: L.Mixin.Events,
 
     initialize: function(options) {
-        this.options = L.extend(this.options, options);
+        this.options = deepExtend(this.options, options);
 
         this._currentState = this.states.none;
 
