@@ -97,11 +97,108 @@
     // Initialize DrawSetShapes plugin
     var plugin = new L.Control.DrawSetShapes({
         onSave: pluginSaveCallback,
-        drawOptions: drawOptions
+        drawOptions: drawOptions,
+        localizations: {
+            addTitle: 'Add new zone',
+            saveTitle: 'Save current zone',
+            editTitle: 'Edit current zone',
+            cloneTitle: 'Clone current zone',
+            drawPlugin: {
+                draw: {
+                    toolbar: {
+                        actions: {
+                            title: 'Cancel drawing',
+                            text: 'Cancel'
+                        },
+                        undo: {
+                            title: 'Delete the last point drawn',
+                            text: 'Delete the last point'
+                        },
+                        buttons: {
+                            polyline: 'Draw a polyline',
+                            polygon: 'Draw a polygon',
+                            rectangle: 'Draw a rectangle',
+                            circle: 'Draw a circle',
+                            marker: 'Draw a marker'
+                        }
+                    },
+                    handlers: {
+                        circle: {
+                            tooltip: {
+                                start: 'Click and drag to draw circle'
+                            },
+                            radius: 'Radius'
+                        },
+                        marker: {
+                            tooltip: {
+                                start: 'Click map to place marker'
+                            }
+                        },
+                        polygon: {
+                            tooltip: {
+                                start: 'Click to start drawing a polygon',
+                                cont: 'Click to continue drawing a polygon',
+                                end: 'Click the first point to close a polygon'
+                            }
+                        },
+                        polyline: {
+                            error: '<strong>Error:</strong> shape edges cannot cross!',
+                            tooltip: {
+                                start: 'Click to start drawing line',
+                                cont: 'Click to continue drawing line',
+                                end: 'Click last point to finish line'
+                            }
+                        },
+                        rectangle: {
+                            tooltip: {
+                                start: 'Click and drag to draw rectangle'
+                            }
+                        },
+                        simpleshape: {
+                            tooltip: {
+                                end: 'Release mouse to finish drawing'
+                            }
+                        }
+                    }
+                },
+                edit: {
+                    toolbar: {
+                        actions: {
+                            save: {
+                                title: 'Save changes',
+                                text: 'Save'
+                            },
+                            cancel: {
+                                title: 'Cancel editing, discards all changes',
+                                text: 'Cancel'
+                            }
+                        },
+                        buttons: {
+                            edit: 'Edit zones',
+                            editDisabled: 'No zones to edit',
+                            remove: 'Delete zones',
+                            removeDisabled: 'No zones to delete'
+                        }
+                    },
+                    handlers: {
+                        edit: {
+                            tooltip: {
+                                text: 'Drag points to edit zones',
+                                subtext: 'Click cancel to undo changes'
+                            }
+                        },
+                        remove: {
+                            tooltip: {
+                                text: ' Click the required zone to remove it'
+                            }
+                        }
+                    }
+                }
+            }
+        }
     });
     plugin.addTo(map);
 
     loadZonesToSelect();
-
 
 }(this));
