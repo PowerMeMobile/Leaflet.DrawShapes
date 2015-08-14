@@ -398,5 +398,20 @@ L.DrawSetShapes.Toolbar = L.Class.extend({
     }
 });
 
+/**
+* Utils
+*/
+var deepExtend = function(destination, source) {
+    for (var prop in source) {
+        if (source[prop] && source[prop].constructor && source[prop].constructor === Object) {
+            destination[prop] = destination[prop] || {};
+            deepExtend(destination[prop], source[prop]);
+        } else {
+            destination[prop] = source[prop];
+        }
+    }
+
+    return destination;
+};
 
 }(window, document));
