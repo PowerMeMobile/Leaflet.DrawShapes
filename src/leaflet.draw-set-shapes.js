@@ -44,6 +44,8 @@ L.Control.DrawSetShapes = L.Control.extend({
     onAdd: function(map) {
         var container = this._toolbar.addToolbar(map);
 
+        L.drawLocal = deepExtend(L.drawLocal, this.options.localizations.drawPlugin);
+
         this._initializeDrawPlugin(this.options.drawOptions || {});
 
         return container;
