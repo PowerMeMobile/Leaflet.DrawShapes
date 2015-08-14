@@ -9,7 +9,7 @@
 
 L.DrawSetShapes = {};
 
-L.DrawSetShapes.version = '0.0.3';
+L.DrawSetShapes.version = '0.0.4';
 
 L.Control.DrawSetShapes = L.Control.extend({
     defaultOptions: {

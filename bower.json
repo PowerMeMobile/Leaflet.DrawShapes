@@ -1,6 +1,6 @@
 {
   "name": "powerads-map",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "authors": "pmm",
   "description": "Component for showing map and editing regions for sending",
   "license": "MIT",
