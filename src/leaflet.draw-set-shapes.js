@@ -9,7 +9,7 @@
 
 L.DrawSetShapes = {};
 
-L.DrawSetShapes.version = '0.0.3';
+L.DrawSetShapes.version = '0.0.4';
 
 L.Control.DrawSetShapes = L.Control.extend({
     defaultOptions: {
@@ -43,6 +43,8 @@ L.Control.DrawSetShapes = L.Control.extend({
 
     onAdd: function(map) {
         var container = this._toolbar.addToolbar(map);
+
+        L.drawLocal = deepExtend(L.drawLocal, this.options.localizations.drawPlugin);
 
         this._initializeDrawPlugin(this.options.drawOptions || {});
 
@@ -216,16 +218,18 @@ L.Control.DrawSetShapes = L.Control.extend({
 
 L.DrawSetShapes.Toolbar = L.Class.extend({
     options: {
-        addText: '',
-        addTitle:'Add new layer with sahapes',
-        saveText: 'Save',
-        saveTitle: 'Save current layer',
-        editText: '',
-        editTitle: 'Edit current layer',
-        cloneText: '',
-        cloneTitle: 'Clone current layer',
-        cancelText: 'Cancel',
-        cancelTitle: 'Cancel editing'
+        localizations: {
+            addText: '',
+            addTitle:'Add new layer with shapes',
+            saveText: 'Save',
+            saveTitle: 'Save current layer',
+            editText: '',
+            editTitle: 'Edit current layer',
+            cloneText: '',
+            cloneTitle: 'Clone current layer',
+            cancelText: 'Cancel',
+            cancelTitle: 'Cancel editing'
+        }
     },
 
     states: {
@@ -239,7 +243,7 @@ L.DrawSetShapes.Toolbar = L.Class.extend({
     includes: L.Mixin.Events,
 
     initialize: function(options) {
-        this.options = L.extend(this.options, options);
+        this.options = deepExtend(this.options, options);
 
         this._currentState = this.states.none;
 
@@ -353,13 +357,13 @@ L.DrawSetShapes.Toolbar = L.Class.extend({
             buttonName = 'leaflet-draw-set-shapes-button';
 
         this._addLayersButton  = this._createButton(
-                this.options.addText, this.options.addTitle,
+                this.options.localizations.addText, this.options.localizations.addTitle,
                 buttonName + '-add',  toolbarContainer, this._addClick,  this);
         this._editLayersButton = this._createButton(
-                this.options.editText, this.options.editTitle,
+                this.options.localizations.editText, this.options.localizations.editTitle,
                 buttonName + '-edit', toolbarContainer, this._editClick, this);
         this._cloneLayersButton = this._createButton(
-                this.options.cloneText, this.options.cloneTitle,
+                this.options.localizations.cloneText, this.options.localizations.cloneTitle,
                 buttonName + '-clone', toolbarContainer, this._cloneClick, this);
 
         return container;
@@ -371,10 +375,10 @@ L.DrawSetShapes.Toolbar = L.Class.extend({
             liCancel = L.DomUtil.create('li', '', actionContainer),
             liSave = L.DomUtil.create('li', '', actionContainer);
 
-        this._saveButton = this._createButton(this.options.saveText,
-            this.options.saveTitle, '', liSave, this._saveClick, this);
-        this._cancelButton = this._createButton(this.options.cancelText,
-            this.options.cancelTitle, '', liCancel, this._cancelClick, this);
+        this._saveButton = this._createButton(this.options.localizations.saveText,
+            this.options.localizations.saveTitle, '', liSave, this._saveClick, this);
+        this._cancelButton = this._createButton(this.options.localizations.cancelText,
+            this.options.localizations.cancelTitle, '', liCancel, this._cancelClick, this);
 
         return actionContainer;
     },
@@ -398,5 +402,20 @@ L.DrawSetShapes.Toolbar = L.Class.extend({
     }
 });
 
+/**
+* Utils
+*/
+var deepExtend = function(destination, source) {
+    for (var prop in source) {
+        if (source[prop] && source[prop].constructor && source[prop].constructor === Object) {
+            destination[prop] = destination[prop] || {};
+            deepExtend(destination[prop], source[prop]);
+        } else {
+            destination[prop] = source[prop];
+        }
+    }
+
+    return destination;
+};
 
 }(window, document));
