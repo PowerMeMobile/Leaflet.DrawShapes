@@ -39,6 +39,8 @@ L.Control.DrawSetShapes = L.Control.extend({
         this._toolbar.on('cancel:click', this._cancelEditing, this);
 
         this._mode = this.modes.none;
+
+        this.backup = null;
     },
 
     onAdd: function(map) {
@@ -213,6 +215,10 @@ L.Control.DrawSetShapes = L.Control.extend({
 
     _changeToolbarState: function(state) {
         this._toolbar.fire('change:state', {state: state});
+    },
+
+    _backupLayers: function() {
+        this.backup = this._currentLayersAsGeoJson() || null;
     }
 });
 
