@@ -9,7 +9,7 @@
 
 L.DrawSetShapes = {};
 
-L.DrawSetShapes.version = '0.0.4';
+L.DrawSetShapes.version = '0.0.5';
 
 L.Control.DrawSetShapes = L.Control.extend({
     defaultOptions: {
@@ -39,6 +39,8 @@ L.Control.DrawSetShapes = L.Control.extend({
         this._toolbar.on('cancel:click', this._cancelEditing, this);
 
         this._mode = this.modes.none;
+
+        this.backup = null;
     },
 
     onAdd: function(map) {
@@ -70,7 +72,8 @@ L.Control.DrawSetShapes = L.Control.extend({
     * Clear drawn shapes from map and call cancel event.
     */
     clearData: function() {
-        this._clearDrawnShapes();
+        this._clearLayers();
+        this.backup = null;
         this._cancelEditing();
     },
 
@@ -129,9 +132,13 @@ L.Control.DrawSetShapes = L.Control.extend({
     },
 
     _cancelEditing: function(event) {
-        //TODO: Implement restoring layers from backup
+        if (this.backup !== null) {
+            this._restoreBackup();
+        } else {
+            this._clearLayers();
+        }
 
-        this._finishEditing();
+        this._hideDrawPlugin();
         this._changeToolbarState(this._toolbar.states.none);
         this._mode = this.modes.none;
     },
@@ -158,10 +165,14 @@ L.Control.DrawSetShapes = L.Control.extend({
     },
 
     _startEditLayers: function(layers) {
-        this._clearDrawnShapes();
+        this._clearLayers();
 
         if (layers) {
             this._loadLayersAsGeoJson(layers);
+        };
+
+        if (this._mode === this.modes.editing) {
+            this._backupLayers();
         };
 
         this._showDrawPlugin();
@@ -193,12 +204,6 @@ L.Control.DrawSetShapes = L.Control.extend({
         this._drawControlShowed = true;
     },
 
-    _finishEditing: function() {
-        this._hideDrawPlugin();
-
-        // TODO: implement clearing backup with layers
-    },
-
     _hideDrawPlugin: function() {
         // TODO: optimize this because impossible remove control that has been deleted!
         if (this._drawControlShowed) {
@@ -207,12 +212,22 @@ L.Control.DrawSetShapes = L.Control.extend({
         };
     },
 
-    _clearDrawnShapes: function() {
+    _clearLayers: function() {
         this._drawnShapes.clearLayers();
     },
 
     _changeToolbarState: function(state) {
         this._toolbar.fire('change:state', {state: state});
+    },
+
+    _backupLayers: function() {
+        this.backup = this._currentLayersAsGeoJson() || null;
+    },
+
+    _restoreBackup: function() {
+        this._clearLayers();
+        this._loadLayersAsGeoJson(this.backup);
+        this.backup = null;
     }
 });
 
