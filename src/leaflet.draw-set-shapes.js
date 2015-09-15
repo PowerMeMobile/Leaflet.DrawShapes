@@ -73,6 +73,7 @@ L.Control.DrawSetShapes = L.Control.extend({
     */
     clearData: function() {
         this._clearLayers();
+        this.backup = null;
         this._cancelEditing();
     },
 
@@ -131,7 +132,11 @@ L.Control.DrawSetShapes = L.Control.extend({
     },
 
     _cancelEditing: function(event) {
-        //TODO: Implement restoring layers from backup
+        if (this.backup !== null) {
+            this._restoreBackup();
+        } else {
+            this._clearLayers();
+        }
 
         this._finishEditing();
         this._changeToolbarState(this._toolbar.states.none);
