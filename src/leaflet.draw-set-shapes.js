@@ -165,6 +165,7 @@ L.Control.DrawSetShapes = L.Control.extend({
         if (layers) {
             this._loadLayersAsGeoJson(layers);
         };
+        this._backupLayers();
 
         this._showDrawPlugin();
     },
