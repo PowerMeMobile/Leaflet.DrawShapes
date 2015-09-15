@@ -138,7 +138,7 @@ L.Control.DrawSetShapes = L.Control.extend({
             this._clearLayers();
         }
 
-        this._finishEditing();
+        this._hideDrawPlugin();
         this._changeToolbarState(this._toolbar.states.none);
         this._mode = this.modes.none;
     },
@@ -199,12 +199,6 @@ L.Control.DrawSetShapes = L.Control.extend({
     _showDrawPlugin: function() {
         this._map.addControl(this._drawControl);
         this._drawControlShowed = true;
-    },
-
-    _finishEditing: function() {
-        this._hideDrawPlugin();
-
-        // TODO: implement clearing backup with layers
     },
 
     _hideDrawPlugin: function() {
