@@ -170,7 +170,10 @@ L.Control.DrawSetShapes = L.Control.extend({
         if (layers) {
             this._loadLayersAsGeoJson(layers);
         };
-        this._backupLayers();
+
+        if (this._mode === this.modes.editing) {
+            this._backupLayers();
+        };
 
         this._showDrawPlugin();
     },
