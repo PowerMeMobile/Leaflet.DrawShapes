@@ -219,6 +219,12 @@ L.Control.DrawSetShapes = L.Control.extend({
 
     _backupLayers: function() {
         this.backup = this._currentLayersAsGeoJson() || null;
+    },
+
+    _restoreBackup: function() {
+        this._clearLayers();
+        this._loadLayersAsGeoJson(this.backup);
+        this.backup = null;
     }
 });
 
