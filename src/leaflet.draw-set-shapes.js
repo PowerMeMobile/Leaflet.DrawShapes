@@ -70,7 +70,7 @@ L.Control.DrawSetShapes = L.Control.extend({
     * Clear drawn shapes from map and call cancel event.
     */
     clearData: function() {
-        this._clearDrawnShapes();
+        this._clearLayers();
         this._cancelEditing();
     },
 
@@ -158,7 +158,7 @@ L.Control.DrawSetShapes = L.Control.extend({
     },
 
     _startEditLayers: function(layers) {
-        this._clearDrawnShapes();
+        this._clearLayers();
 
         if (layers) {
             this._loadLayersAsGeoJson(layers);
@@ -207,7 +207,7 @@ L.Control.DrawSetShapes = L.Control.extend({
         };
     },
 
-    _clearDrawnShapes: function() {
+    _clearLayers: function() {
         this._drawnShapes.clearLayers();
     },
 
