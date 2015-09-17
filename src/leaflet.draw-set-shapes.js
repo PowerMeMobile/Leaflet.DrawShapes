@@ -22,6 +22,8 @@ L.Control.DrawSetShapes = L.Control.extend({
         none: 'NONE'
     },
 
+    includes: L.Mixin.Events,
+
     initialize: function(opts) {
         L.Control.prototype.initialize.call(this, opts);
 
