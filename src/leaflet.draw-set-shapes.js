@@ -84,6 +84,7 @@ L.Control.DrawSetShapes = L.Control.extend({
 
         this._startEditLayers();
         this._changeToolbarState(this._toolbar.states.add);
+        this.fire('ds:startcreating');
     },
 
     _saveLayers: function(event) {
@@ -122,6 +123,7 @@ L.Control.DrawSetShapes = L.Control.extend({
 
         this._startEditLayers(layers);
         this._changeToolbarState(this._toolbar.states.edit);
+        this.fire('ds:startediting');
     },
 
     _cloneLayers: function(event) {
@@ -131,6 +133,7 @@ L.Control.DrawSetShapes = L.Control.extend({
 
         this._startEditLayers(layers);
         this._changeToolbarState(this._toolbar.states.clone);
+        this.fire('ds:startcloning');
     },
 
     _cancelEditing: function(event) {
