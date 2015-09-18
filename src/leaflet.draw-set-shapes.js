@@ -11,15 +11,20 @@ L.DrawSetShapes = {};
 
 L.DrawSetShapes.version = '0.0.5';
 
+/**
+ * Enum with plugin states.
+ *
+ * @type {Object}
+ */
+L.DrawSetShapes.state = {
+    editing: 'EDITING',
+    creating: 'CREATING',
+    none: 'NONE'
+};
+
 L.Control.DrawSetShapes = L.Control.extend({
     defaultOptions: {
         position: 'topleft'
-    },
-
-    modes: {
-        editing: 'EDITING',
-        creating: 'CREATING',
-        none: 'NONE'
     },
 
     includes: L.Mixin.Events,
@@ -40,7 +45,7 @@ L.Control.DrawSetShapes = L.Control.extend({
         this._toolbar.on('clone:click', this._cloneLayers, this);
         this._toolbar.on('cancel:click', this._cancelEditing, this);
 
-        this._mode = this.modes.none;
+        this._state = L.DrawSetShapes.state.none;
 
         this.backup = null;
     },
@@ -80,7 +85,7 @@ L.Control.DrawSetShapes = L.Control.extend({
     },
 
     _addLayers: function(event) {
-        this._mode = this.modes.creating;
+        this._state = L.DrawSetShapes.state.creating;
 
         this._startEditLayers();
         this._changeToolbarState(this._toolbar.states.add);
@@ -90,7 +95,7 @@ L.Control.DrawSetShapes = L.Control.extend({
     _saveLayers: function(event) {
         var that = this,
             callback = this.options.onSave,
-            isNew = this._mode === this.modes.creating;
+            isNew = this._state === L.DrawSetShapes.state.creating;
 
         this._changeToolbarState(this._toolbar.states.save);
         this._hideDrawPlugin();
@@ -112,14 +117,14 @@ L.Control.DrawSetShapes = L.Control.extend({
                 });
         } else {
             this._changeToolbarState(this._toolbar.states.none);
-            this._mode = this.modes.none;
+            this._state = L.DrawSetShapes.state.none;
         };
     },
 
     _editLayers: function(event) {
         var layers = this._currentLayersAsGeoJson();
 
-        this._mode = this.modes.editing;
+        this._state = L.DrawSetShapes.state.editing;
 
         this._startEditLayers(layers);
         this._changeToolbarState(this._toolbar.states.edit);
@@ -129,7 +134,7 @@ L.Control.DrawSetShapes = L.Control.extend({
     _cloneLayers: function(event) {
         var layers = this._currentLayersAsGeoJson();
 
-        this._mode = this.modes.creating;
+        this._state = L.DrawSetShapes.state.creating;
 
         this._startEditLayers(layers);
         this._changeToolbarState(this._toolbar.states.clone);
@@ -145,7 +150,7 @@ L.Control.DrawSetShapes = L.Control.extend({
 
         this._hideDrawPlugin();
         this._changeToolbarState(this._toolbar.states.none);
-        this._mode = this.modes.none;
+        this._state = L.DrawSetShapes.state.none;
     },
 
     _initializeDrawPlugin: function(opts) {
@@ -176,7 +181,7 @@ L.Control.DrawSetShapes = L.Control.extend({
             this._loadLayersAsGeoJson(layers);
         };
 
-        if (this._mode === this.modes.editing) {
+        if (this._state === L.DrawSetShapes.state.editing) {
             this._backupLayers();
         };
 
