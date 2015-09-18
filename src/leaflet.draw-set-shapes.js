@@ -84,6 +84,15 @@ L.Control.DrawSetShapes = L.Control.extend({
         this._cancelEditing();
     },
 
+    /**
+     * Current plugin state
+     *
+     * @return {string} current plugin state @see L.DrawSetShapes.state
+     */
+    currentState: function() {
+        return this._state;
+    },
+
     _addLayers: function(event) {
         this._state = L.DrawSetShapes.state.creating;
 
