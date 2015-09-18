@@ -204,6 +204,8 @@
     plugin.on('ds:startediting', function() { console.log('start editing') });
     plugin.on('ds:startcloning', function() { console.log('start cloning') });
 
+    console.log(plugin.currentState());
+
     loadZonesToSelect();
 
 }(this));
