@@ -199,6 +199,13 @@
     });
     plugin.addTo(map);
 
+    // Add logging for events
+    plugin.on('ds:startcreating', function() { console.log('start creating') });
+    plugin.on('ds:startediting', function() { console.log('start editing') });
+    plugin.on('ds:startcloning', function() { console.log('start cloning') });
+
+    console.log(plugin.currentState());
+
     loadZonesToSelect();
 
 }(this));
