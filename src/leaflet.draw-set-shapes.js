@@ -114,7 +114,7 @@
 
                 promise.then(function() {
                         that._changeToolbarState(that._toolbar.states.none);
-                        that._mode = that.modes.none;
+                        that._state = L.DrawSetShapes.state.none;
                     })
                     .catch(function(error) {
                         // Log error after external save
