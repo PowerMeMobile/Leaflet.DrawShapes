@@ -303,7 +303,8 @@
         },
 
         _addClick: function(e) {
-            if (this._currentState === this.states.none) {
+            if (this._currentState === this.states.none ||
+                this._currentState === this.states.preview) {
                 this.fire('add:click', e);
             };
         },
@@ -315,13 +316,13 @@
         },
 
         _editClick: function(e) {
-            if (this._currentState === this.states.none) {
+            if (this._currentState === this.states.preview) {
                 this.fire('edit:click', e);
             };
         },
 
         _cloneClick: function(e) {
-            if (this._currentState === this.states.none) {
+            if (this._currentState === this.states.preview) {
                 this.fire('clone:click', e);
             };
         },
