@@ -113,7 +113,7 @@
                 var promise = callback(this._currentLayersAsGeoJson(), isNew);
 
                 promise.then(function() {
-                        that._changeToolbarState(that._toolbar.states.none);
+                        that._changeToolbarState(that._toolbar.states.preview);
                         that._state = L.DrawSetShapes.state.none;
                     })
                     .catch(function(error) {
