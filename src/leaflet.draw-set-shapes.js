@@ -205,6 +205,8 @@
         _loadLayersAsGeoJson: function(layers) {
             this._drawnShapes.addData(layers);
             this._adjustMapBoundsToLayers(this._drawnShapes);
+
+            this._changeToolbarState(this._toolbar.states.preview);
         },
 
         _adjustMapBoundsToLayers: function(layers) {
