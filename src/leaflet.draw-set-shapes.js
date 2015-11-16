@@ -271,7 +271,8 @@
             edit: 'EDIT',
             clone: 'CLONE',
             save: 'SAVE',
-            none: 'NONE'
+            none: 'NONE',
+            preview: 'PREVIEW'
         },
 
         includes: L.Mixin.Events,
@@ -356,9 +357,16 @@
                     break;
                 case this.states.none:
                     L.DomUtil.removeClass(this._addLayersButton, 'leaflet-disabled');
+                    L.DomUtil.addClass(this._editLayersButton, 'leaflet-disabled');
+                    L.DomUtil.addClass(this._cloneLayersButton, 'leaflet-disabled');
+                    this._hideActionButtons();
+                    break;
+                case this.states.preview:
+                    L.DomUtil.removeClass(this._addLayersButton, 'leaflet-disabled');
                     L.DomUtil.removeClass(this._editLayersButton, 'leaflet-disabled');
                     L.DomUtil.removeClass(this._cloneLayersButton, 'leaflet-disabled');
                     this._hideActionButtons();
+                    break;
             };
         },
 
