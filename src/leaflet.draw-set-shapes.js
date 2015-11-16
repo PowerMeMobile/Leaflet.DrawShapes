@@ -279,9 +279,7 @@
         initialize: function(options) {
             this.options = deepExtend(this.options, options);
 
-            this._currentState = this.states.none;
-
-            this.on('change:state', this._changeState, this);
+            this.on('change:state', this._onChaneState, this);
         },
 
         addToolbar: function(map) {
@@ -290,6 +288,8 @@
             this._actionButtons = this._createActionButtons();
 
             container.appendChild(this._actionButtons);
+
+            this._changeState(this.states.none);
 
             return container;
         },
@@ -322,8 +322,12 @@
             this.fire('cancel:click', e);
         },
 
-        _changeState: function(e) {
-            var state = this._currentState = e.state;
+        _onChaneState: function(event) {
+            this._changeState(event.state);
+        },
+
+        _changeState: function(state) {
+            var state = this._currentState = state;
 
             switch (state) {
                 case this.states.add:
