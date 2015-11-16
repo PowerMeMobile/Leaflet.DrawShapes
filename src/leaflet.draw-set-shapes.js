@@ -151,14 +151,19 @@
         },
 
         _cancelEditing: function(event) {
+            var toolbarState;
+
             if (this.backup !== null) {
                 this._restoreBackup();
+                toolbarState = this._toolbar.states.preview;
             } else {
                 this._clearLayers();
+                toolbarState = this._toolbar.states.none;
             }
 
             this._hideDrawPlugin();
-            this._changeToolbarState(this._toolbar.states.none);
+
+            this._changeToolbarState(toolbarState);
             this._state = L.DrawSetShapes.state.none;
         },
 
