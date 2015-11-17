@@ -218,7 +218,7 @@
         _currentLayersAsGeoJson: function() {
             var layers;
 
-            if (this._drawnShapes.getLayers().length > 0) {
+            if (this._shapesCount() > 0) {
                 layers = this._drawnShapes.toGeoJSON();
             };
 
@@ -254,6 +254,10 @@
             this._clearLayers();
             this._loadLayersAsGeoJson(this.backup);
             this.backup = null;
+        },
+
+        _shapesCount: function() {
+            return this._drawnShapes.getLayers().length;
         }
     });
 
