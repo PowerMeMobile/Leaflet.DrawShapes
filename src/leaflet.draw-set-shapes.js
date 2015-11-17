@@ -260,6 +260,8 @@
 
         _changeToolbarState: function(state) {
             this._toolbar.fire('change:state', {state: state});
+
+            this._changeToolbarActions(this._shapesCount() > 0);
         },
 
         _changeToolbarActions: function(allowSaveing) {
