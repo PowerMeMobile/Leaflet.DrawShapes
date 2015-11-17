@@ -292,6 +292,7 @@
             this.options = deepExtend(this.options, options);
 
             this.on('change:state', this._onChaneState, this);
+            this.on('change:action', this._onChangeAction, this);
         },
 
         addToolbar: function(map) {
@@ -380,6 +381,22 @@
                     this._hideActionButtons();
                     break;
             };
+        },
+
+        _onChangeAction: function(event) {
+            this._changeAction(event.allowSaveing);
+        },
+
+        _changeAction: function(allowSaveing) {
+            switch (this._currentState) {
+                case this.states.add:
+                case this.states.edit:
+                case this.states.clone:
+                    var display = allowSaveing ? 'inline-block' : 'none';
+
+                    this._saveButton.style.display = display;
+                break;
+            }
         },
 
         _showActionButtons: function(state) {
