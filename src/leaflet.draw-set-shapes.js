@@ -180,6 +180,11 @@
 
             this._drawControl = new L.Control.Draw(opts);
 
+            // Subscribe on change shapes count for hide/show `Save` button on the toolbar.
+            this._drawnShapes.on('layeradd layerremove', function(event) {
+                this._changeToolbarActions(this._shapesCount() > 0);
+            }, this);
+
             // Add layer with shape on event
             this._map.on('draw:created', function (e) {
                 var layer = e.layer;
