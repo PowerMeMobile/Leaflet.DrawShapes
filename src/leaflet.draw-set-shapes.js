@@ -185,6 +185,17 @@
                 this._changeToolbarActions(this._shapesCount() > 0);
             }, this);
 
+            // Subscribe on start draw/edit/delete actions in the draw plugin.
+            this._map.on('draw:drawstart draw:editstart draw:deletestart', function(event) {
+                // Send event for hide `Save` button on the toolbar.
+                this._changeToolbarActions(false);
+            }, this);
+            // Subscribe on stop draw/edit/delete actions in the draw plugin.
+            this._map.on('draw:drawstop draw:editstop draw:deletestop', function(event) {
+                // Show button `Save` only if shapes more then 0.
+                this._changeToolbarActions(this._shapesCount() > 0);
+            }, this);
+
             // Add layer with shape on event
             this._map.on('draw:created', function (e) {
                 var layer = e.layer;
