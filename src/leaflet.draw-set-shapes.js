@@ -246,6 +246,10 @@
             this._toolbar.fire('change:state', {state: state});
         },
 
+        _changeToolbarActions: function(allowSaveing) {
+            this._toolbar.fire('change:action', { allowSaveing: allowSaveing });
+        },
+
         _backupLayers: function() {
             this.backup = this._currentLayersAsGeoJson() || null;
         },
