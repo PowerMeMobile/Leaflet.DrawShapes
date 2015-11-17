@@ -469,8 +469,8 @@
         _createActionButtons: function() {
             // TODO: Decrease dependence from Draw plugin css classes
             var actionContainer = L.DomUtil.create('ul', 'leaflet-draw-actions'),
-                liCancel = L.DomUtil.create('li', '', actionContainer),
-                liSave = L.DomUtil.create('li', '', actionContainer);
+                liSave = L.DomUtil.create('li', '', actionContainer),
+                liCancel = L.DomUtil.create('li', '', actionContainer);
 
             this._saveButton = this._createButton(this.options.localizations.saveText,
                 this.options.localizations.saveTitle, '', liSave, this._saveClick, this);
