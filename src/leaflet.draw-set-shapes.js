@@ -36,7 +36,7 @@
 
             this._toolbar = new L.DrawSetShapes.Toolbar(this.options);
 
-            // Override position for draw plugin is same as for us plugin.
+            // Overrides position for draw plugin is same as for our plugin.
             opts.drawOptions.position = this.options.position;
 
             this._toolbar.on('add:click', this._addLayers, this);
