@@ -9,7 +9,7 @@
 
     L.DrawSetShapes = {};
 
-    L.DrawSetShapes.version = '0.0.7';
+    L.DrawSetShapes.version = '0.0.8';
 
     /**
      * Enum with plugin states.
@@ -36,7 +36,7 @@
 
             this._toolbar = new L.DrawSetShapes.Toolbar(this.options);
 
-            // Override position for draw plugin is same as for us plugin.
+            // Overrides position for draw plugin is same as for our plugin.
             opts.drawOptions.position = this.options.position;
 
             this._toolbar.on('add:click', this._addLayers, this);
@@ -121,8 +121,8 @@
                         console.log('[Draw set shapes] error on save: ', error);
 
                         // Return to edit state in case some error on save
-                        that._changeToolbarState(that._toolbar.states.edit);
                         that._startEditLayers(that._currentLayersAsGeoJson());
+                        that._changeToolbarState(that._toolbar.states.edit);
                     });
             } else {
                 this._changeToolbarState(this._toolbar.states.none);
@@ -180,6 +180,22 @@
 
             this._drawControl = new L.Control.Draw(opts);
 
+            // Subscribe on change shapes count for hide/show `Save` button on the toolbar.
+            this._drawnShapes.on('layeradd layerremove', function(event) {
+                this._changeToolbarActions(this._shapesCount() > 0);
+            }, this);
+
+            // Subscribe on start draw/edit/delete actions in the draw plugin.
+            this._map.on('draw:drawstart draw:editstart draw:deletestart', function(event) {
+                // Send event for hide `Save` button on the toolbar.
+                this._changeToolbarActions(false);
+            }, this);
+            // Subscribe on stop draw/edit/delete actions in the draw plugin.
+            this._map.on('draw:drawstop draw:editstop draw:deletestop', function(event) {
+                // Show button `Save` only if shapes more then 0.
+                this._changeToolbarActions(this._shapesCount() > 0);
+            }, this);
+
             // Add layer with shape on event
             this._map.on('draw:created', function (e) {
                 var layer = e.layer;
@@ -218,7 +234,7 @@
         _currentLayersAsGeoJson: function() {
             var layers;
 
-            if (this._drawnShapes.getLayers().length > 0) {
+            if (this._shapesCount() > 0) {
                 layers = this._drawnShapes.toGeoJSON();
             };
 
@@ -244,6 +260,12 @@
 
         _changeToolbarState: function(state) {
             this._toolbar.fire('change:state', {state: state});
+
+            this._changeToolbarActions(this._shapesCount() > 0);
+        },
+
+        _changeToolbarActions: function(allowSaveing) {
+            this._toolbar.fire('change:action', { allowSaveing: allowSaveing });
         },
 
         _backupLayers: function() {
@@ -254,6 +276,10 @@
             this._clearLayers();
             this._loadLayersAsGeoJson(this.backup);
             this.backup = null;
+        },
+
+        _shapesCount: function() {
+            return this._drawnShapes.getLayers().length;
         }
     });
 
@@ -288,6 +314,7 @@
             this.options = deepExtend(this.options, options);
 
             this.on('change:state', this._onChaneState, this);
+            this.on('change:action', this._onChangeAction, this);
         },
 
         addToolbar: function(map) {
@@ -378,6 +405,22 @@
             };
         },
 
+        _onChangeAction: function(event) {
+            this._changeAction(event.allowSaveing);
+        },
+
+        _changeAction: function(allowSaveing) {
+            switch (this._currentState) {
+                case this.states.add:
+                case this.states.edit:
+                case this.states.clone:
+                    var display = allowSaveing ? 'inline-block' : 'none';
+
+                    this._saveButton.style.display = display;
+                break;
+            }
+        },
+
         _showActionButtons: function(state) {
             var top = this._getActionButtonsPosition(state);
 
@@ -426,8 +469,8 @@
         _createActionButtons: function() {
             // TODO: Decrease dependence from Draw plugin css classes
             var actionContainer = L.DomUtil.create('ul', 'leaflet-draw-actions'),
-                liCancel = L.DomUtil.create('li', '', actionContainer),
-                liSave = L.DomUtil.create('li', '', actionContainer);
+                liSave = L.DomUtil.create('li', '', actionContainer),
+                liCancel = L.DomUtil.create('li', '', actionContainer);
 
             this._saveButton = this._createButton(this.options.localizations.saveText,
                 this.options.localizations.saveTitle, '', liSave, this._saveClick, this);
