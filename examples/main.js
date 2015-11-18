@@ -41,7 +41,7 @@
 
             zoneName = window.prompt('Please, specify region name');
 
-            if (zoneName === '') {
+            if (zoneName === null || zoneName === '') {
                 return false;
             };
 
