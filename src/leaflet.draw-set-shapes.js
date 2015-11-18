@@ -121,8 +121,8 @@
                         console.log('[Draw set shapes] error on save: ', error);
 
                         // Return to edit state in case some error on save
-                        that._changeToolbarState(that._toolbar.states.edit);
                         that._startEditLayers(that._currentLayersAsGeoJson());
+                        that._changeToolbarState(that._toolbar.states.edit);
                     });
             } else {
                 this._changeToolbarState(this._toolbar.states.none);
