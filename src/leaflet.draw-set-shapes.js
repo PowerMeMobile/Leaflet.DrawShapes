@@ -23,7 +23,7 @@
     };
 
     L.Control.DrawSetShapes = L.Control.extend({
-        defaultOptions: {
+        options: {
             position: 'topleft'
         },
 
@@ -31,8 +31,6 @@
 
         initialize: function(opts) {
             L.Control.prototype.initialize.call(this, opts);
-
-            this.options = L.extend(this.defaultOptions, opts)
 
             this._toolbar = new L.DrawSetShapes.Toolbar(this.options);
 
