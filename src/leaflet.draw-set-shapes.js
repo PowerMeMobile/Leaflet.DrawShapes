@@ -333,7 +333,8 @@
 
         _addClick: function(e) {
             if (this._currentState === this.states.none ||
-                this._currentState === this.states.preview) {
+                this._currentState === this.states.preview ||
+                this._currentState === this.states.noteditable) {
                 this.fire('add:click', e);
             };
         },
@@ -351,7 +352,8 @@
         },
 
         _cloneClick: function(e) {
-            if (this._currentState === this.states.preview) {
+            if (this._currentState === this.states.preview ||
+                this._currentState === this.states.noteditable) {
                 this.fire('clone:click', e);
             };
         },
