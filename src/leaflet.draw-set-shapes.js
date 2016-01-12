@@ -67,10 +67,11 @@
         *
         * @param {object} data - The GeoJSON data.
         * @see {@link http://geojson.org|GeoJSON specification}
+        * @param {boolean=} noteditable - Disallow edit current data.
         */
-        loadData: function(data) {
+        loadData: function(data, noteditable) {
             this.clearData();
-            this._loadLayersAsGeoJson(data);
+            this._loadLayersAsGeoJson(data, noteditable);
         },
 
         /**
@@ -216,11 +217,13 @@
             this._showDrawPlugin();
         },
 
-        _loadLayersAsGeoJson: function(layers) {
+        _loadLayersAsGeoJson: function(layers, noteditable) {
             this._drawnShapes.addData(layers);
             this._adjustMapBoundsToLayers(this._drawnShapes);
 
-            this._changeToolbarState(this._toolbar.states.preview);
+            noteditable = noteditable === undefined ? false : noteditable;
+            var state = noteditable ? this._toolbar.states.noteditable : this._toolbar.states.preview;
+            this._changeToolbarState(state);
         },
 
         _adjustMapBoundsToLayers: function(layers) {
