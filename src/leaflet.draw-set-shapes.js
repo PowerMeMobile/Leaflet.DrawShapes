@@ -303,7 +303,8 @@
             clone: 'CLONE',
             save: 'SAVE',
             none: 'NONE',
-            preview: 'PREVIEW'
+            preview: 'PREVIEW',
+            noteditable: 'NOTEDITABLE'
         },
 
         includes: L.Mixin.Events,
@@ -397,6 +398,12 @@
                 case this.states.preview:
                     L.DomUtil.removeClass(this._addLayersButton, 'leaflet-disabled');
                     L.DomUtil.removeClass(this._editLayersButton, 'leaflet-disabled');
+                    L.DomUtil.removeClass(this._cloneLayersButton, 'leaflet-disabled');
+                    this._hideActionButtons();
+                    break;
+                case this.states.noteditable:
+                    L.DomUtil.removeClass(this._addLayersButton, 'leaflet-disabled');
+                    L.DomUtil.addClass(this._editLayersButton, 'leaflet-disabled');
                     L.DomUtil.removeClass(this._cloneLayersButton, 'leaflet-disabled');
                     this._hideActionButtons();
                     break;
