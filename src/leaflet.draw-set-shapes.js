@@ -92,6 +92,24 @@
             return this._state;
         },
 
+        /**
+         * Cancel editing and disable toolbar buttons.
+         */
+        disable: function() {
+            if (this._state !== L.DrawSetShapes.state.none) {
+                this._cancelEditing();
+            }
+
+            this._toolbar.disable();
+        },
+
+        /**
+         * Enable toolbar buttons.
+         */
+        enable: function() {
+            this._toolbar.enable();
+        },
+
         _addLayers: function(event) {
             this._state = L.DrawSetShapes.state.creating;
 
