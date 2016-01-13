@@ -67,10 +67,11 @@
         *
         * @param {object} data - The GeoJSON data.
         * @see {@link http://geojson.org|GeoJSON specification}
+        * @param {boolean=} noteditable - Disallow edit current data.
         */
-        loadData: function(data) {
+        loadData: function(data, noteditable) {
             this.clearData();
-            this._loadLayersAsGeoJson(data);
+            this._loadLayersAsGeoJson(data, noteditable);
         },
 
         /**
@@ -216,11 +217,13 @@
             this._showDrawPlugin();
         },
 
-        _loadLayersAsGeoJson: function(layers) {
+        _loadLayersAsGeoJson: function(layers, noteditable) {
             this._drawnShapes.addData(layers);
             this._adjustMapBoundsToLayers(this._drawnShapes);
 
-            this._changeToolbarState(this._toolbar.states.preview);
+            noteditable = noteditable === undefined ? false : noteditable;
+            var state = noteditable ? this._toolbar.states.noteditable : this._toolbar.states.preview;
+            this._changeToolbarState(state);
         },
 
         _adjustMapBoundsToLayers: function(layers) {
@@ -303,7 +306,8 @@
             clone: 'CLONE',
             save: 'SAVE',
             none: 'NONE',
-            preview: 'PREVIEW'
+            preview: 'PREVIEW',
+            noteditable: 'NOTEDITABLE'
         },
 
         includes: L.Mixin.Events,
@@ -329,7 +333,8 @@
 
         _addClick: function(e) {
             if (this._currentState === this.states.none ||
-                this._currentState === this.states.preview) {
+                this._currentState === this.states.preview ||
+                this._currentState === this.states.noteditable) {
                 this.fire('add:click', e);
             };
         },
@@ -347,7 +352,8 @@
         },
 
         _cloneClick: function(e) {
-            if (this._currentState === this.states.preview) {
+            if (this._currentState === this.states.preview ||
+                this._currentState === this.states.noteditable) {
                 this.fire('clone:click', e);
             };
         },
@@ -397,6 +403,12 @@
                 case this.states.preview:
                     L.DomUtil.removeClass(this._addLayersButton, 'leaflet-disabled');
                     L.DomUtil.removeClass(this._editLayersButton, 'leaflet-disabled');
+                    L.DomUtil.removeClass(this._cloneLayersButton, 'leaflet-disabled');
+                    this._hideActionButtons();
+                    break;
+                case this.states.noteditable:
+                    L.DomUtil.removeClass(this._addLayersButton, 'leaflet-disabled');
+                    L.DomUtil.addClass(this._editLayersButton, 'leaflet-disabled');
                     L.DomUtil.removeClass(this._cloneLayersButton, 'leaflet-disabled');
                     this._hideActionButtons();
                     break;
