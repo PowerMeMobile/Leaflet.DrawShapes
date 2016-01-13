@@ -345,6 +345,8 @@
         },
 
         _addClick: function(e) {
+            if (this._disabled) return;
+
             if (this._state === this.states.none ||
                 this._state === this.states.preview ||
                 this._state === this.states.noteditable) {
@@ -359,12 +361,16 @@
         },
 
         _editClick: function(e) {
+            if (this._disabled) return;
+
             if (this._state === this.states.preview) {
                 this.fire('edit:click', e);
             };
         },
 
         _cloneClick: function(e) {
+            if (this._disabled) return;
+
             if (this._state === this.states.preview ||
                 this._state === this.states.noteditable) {
                 this.fire('clone:click', e);
