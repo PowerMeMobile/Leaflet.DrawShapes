@@ -332,28 +332,28 @@
         },
 
         _addClick: function(e) {
-            if (this._currentState === this.states.none ||
-                this._currentState === this.states.preview ||
-                this._currentState === this.states.noteditable) {
+            if (this._state === this.states.none ||
+                this._state === this.states.preview ||
+                this._state === this.states.noteditable) {
                 this.fire('add:click', e);
             };
         },
 
         _saveClick: function(e) {
-            if (this._currentState !== this.states.save) {
+            if (this._state !== this.states.save) {
                 this.fire('save:click', e);
             };
         },
 
         _editClick: function(e) {
-            if (this._currentState === this.states.preview) {
+            if (this._state === this.states.preview) {
                 this.fire('edit:click', e);
             };
         },
 
         _cloneClick: function(e) {
-            if (this._currentState === this.states.preview ||
-                this._currentState === this.states.noteditable) {
+            if (this._state === this.states.preview ||
+                this._state === this.states.noteditable) {
                 this.fire('clone:click', e);
             };
         },
@@ -367,7 +367,7 @@
         },
 
         _changeState: function(state) {
-            var state = this._currentState = state;
+            var state = this._state = state;
 
             switch (state) {
                 case this.states.add:
@@ -420,7 +420,7 @@
         },
 
         _changeAction: function(allowSaveing) {
-            switch (this._currentState) {
+            switch (this._state) {
                 case this.states.add:
                 case this.states.edit:
                 case this.states.clone:
