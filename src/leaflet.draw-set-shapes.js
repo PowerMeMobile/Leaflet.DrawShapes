@@ -314,6 +314,7 @@
 
         initialize: function(options) {
             this.options = deepExtend(this.options, options);
+            this._disabled = false;
 
             this.on('change:state', this._onChaneState, this);
             this.on('change:action', this._onChangeAction, this);
@@ -329,6 +330,18 @@
             this._changeState(this.states.none);
 
             return container;
+        },
+
+        disable: function() {
+            L.DomUtil.addClass(this._addLayersButton, 'leaflet-disabled');
+            L.DomUtil.addClass(this._editLayersButton, 'leaflet-disabled');
+            L.DomUtil.addClass(this._cloneLayersButton, 'leaflet-disabled');
+            this._disabled = true;
+        },
+
+        enable: function() {
+            this._disabled = false;
+            this._changeState(this._state);
         },
 
         _addClick: function(e) {
