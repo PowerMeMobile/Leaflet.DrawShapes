@@ -265,8 +265,8 @@
             this._changeToolbarActions(this._shapesCount() > 0);
         },
 
-        _changeToolbarActions: function(allowSaveing) {
-            this._toolbar.fire('change:action', { allowSaveing: allowSaveing });
+        _changeToolbarActions: function(allowPreservation) {
+            this._toolbar.fire('change:action', { allowPreservation: allowPreservation });
         },
 
         _backupLayers: function() {
@@ -416,15 +416,15 @@
         },
 
         _onChangeAction: function(event) {
-            this._changeAction(event.allowSaveing);
+            this._changeAction(event.allowPreservation);
         },
 
-        _changeAction: function(allowSaveing) {
+        _changeAction: function(allowPreservation) {
             switch (this._state) {
                 case this.states.add:
                 case this.states.edit:
                 case this.states.clone:
-                    var display = allowSaveing ? 'inline-block' : 'none';
+                    var display = allowPreservation ? 'inline-block' : 'none';
 
                     this._saveButton.style.display = display;
                 break;
