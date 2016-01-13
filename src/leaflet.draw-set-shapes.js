@@ -367,26 +367,26 @@
         },
 
         _changeState: function(state) {
-            var state = this._state = state;
+            this._state = state;
 
-            switch (state) {
+            switch (this._state) {
                 case this.states.add:
                     L.DomUtil.removeClass(this._addLayersButton, 'leaflet-disabled');
                     L.DomUtil.addClass(this._editLayersButton, 'leaflet-disabled');
                     L.DomUtil.addClass(this._cloneLayersButton, 'leaflet-disabled');
-                    this._showActionButtons(state);
+                    this._showActionButtons();
                     break;
                 case this.states.edit:
                     L.DomUtil.removeClass(this._editLayersButton, 'leaflet-disabled');
                     L.DomUtil.addClass(this._addLayersButton, 'leaflet-disabled');
                     L.DomUtil.addClass(this._cloneLayersButton, 'leaflet-disabled');
-                    this._showActionButtons(state);
+                    this._showActionButtons();
                     break;
                 case this.states.clone:
                     L.DomUtil.removeClass(this._cloneLayersButton, 'leaflet-disabled');
                     L.DomUtil.addClass(this._addLayersButton, 'leaflet-disabled');
                     L.DomUtil.addClass(this._editLayersButton, 'leaflet-disabled');
-                    this._showActionButtons(state);
+                    this._showActionButtons();
                     break;
                 case this.states.save:
                     L.DomUtil.addClass(this._addLayersButton, 'leaflet-disabled');
@@ -431,8 +431,8 @@
             }
         },
 
-        _showActionButtons: function(state) {
-            var top = this._getActionButtonsPosition(state);
+        _showActionButtons: function() {
+            var top = this._getActionButtonsPosition();
 
             this._actionButtons.style.top = top;
             this._actionButtons.style.display = 'block';
@@ -442,10 +442,10 @@
             this._actionButtons.style.display = 'none';
         },
 
-        _getActionButtonsPosition: function(state) {
+        _getActionButtonsPosition: function() {
             var top;
 
-            switch (state) {
+            switch (this._state) {
                 case this.states.add: top = this._addLayersButton.offsetTop - 1;
                     break;
                 case this.states.edit: top = this._editLayersButton.offsetTop - 1;
