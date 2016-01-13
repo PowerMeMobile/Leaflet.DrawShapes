@@ -406,6 +406,8 @@
         _changeState: function(state) {
             this._state = state;
 
+            if (this._disabled) return;
+
             switch (this._state) {
                 case this.states.add:
                     L.DomUtil.removeClass(this._addLayersButton, 'leaflet-disabled');
