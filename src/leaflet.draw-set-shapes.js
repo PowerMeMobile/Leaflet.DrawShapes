@@ -353,9 +353,7 @@
         disable: function() {
             if (this._disabled) return;
 
-            L.DomUtil.addClass(this._addLayersButton, 'leaflet-disabled');
-            L.DomUtil.addClass(this._editLayersButton, 'leaflet-disabled');
-            L.DomUtil.addClass(this._cloneLayersButton, 'leaflet-disabled');
+            this._disableButtons();
             this._disabled = true;
         },
 
@@ -414,28 +412,11 @@
 
             switch (this._state) {
                 case this.states.add:
-                    L.DomUtil.removeClass(this._addLayersButton, 'leaflet-disabled');
-                    L.DomUtil.addClass(this._editLayersButton, 'leaflet-disabled');
-                    L.DomUtil.addClass(this._cloneLayersButton, 'leaflet-disabled');
-                    this._showActionButtons();
-                    break;
                 case this.states.edit:
-                    L.DomUtil.removeClass(this._editLayersButton, 'leaflet-disabled');
-                    L.DomUtil.addClass(this._addLayersButton, 'leaflet-disabled');
-                    L.DomUtil.addClass(this._cloneLayersButton, 'leaflet-disabled');
-                    this._showActionButtons();
-                    break;
                 case this.states.clone:
-                    L.DomUtil.removeClass(this._cloneLayersButton, 'leaflet-disabled');
-                    L.DomUtil.addClass(this._addLayersButton, 'leaflet-disabled');
-                    L.DomUtil.addClass(this._editLayersButton, 'leaflet-disabled');
-                    this._showActionButtons();
-                    break;
                 case this.states.save:
-                    L.DomUtil.addClass(this._addLayersButton, 'leaflet-disabled');
-                    L.DomUtil.addClass(this._editLayersButton, 'leaflet-disabled');
-                    L.DomUtil.addClass(this._cloneLayersButton, 'leaflet-disabled');
-                    this._hideActionButtons();
+                    this._disableButtons();
+                    this._showActionButtons();
                     break;
                 case this.states.none:
                     L.DomUtil.removeClass(this._addLayersButton, 'leaflet-disabled');
@@ -549,6 +530,12 @@
                 .on(link, 'click', fn, context);
 
             return link;
+        },
+
+        _disableButtons: function() {
+            L.DomUtil.addClass(this._addLayersButton, 'leaflet-disabled');
+            L.DomUtil.addClass(this._editLayersButton, 'leaflet-disabled');
+            L.DomUtil.addClass(this._cloneLayersButton, 'leaflet-disabled');
         }
     });
 
