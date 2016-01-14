@@ -351,6 +351,8 @@
         },
 
         disable: function() {
+            if (this._disabled) return;
+
             L.DomUtil.addClass(this._addLayersButton, 'leaflet-disabled');
             L.DomUtil.addClass(this._editLayersButton, 'leaflet-disabled');
             L.DomUtil.addClass(this._cloneLayersButton, 'leaflet-disabled');
