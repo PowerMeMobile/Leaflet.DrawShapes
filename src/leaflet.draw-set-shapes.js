@@ -360,6 +360,8 @@
         },
 
         enable: function() {
+            if (this._disabled === false) return;
+
             this._disabled = false;
             this._changeState(this._state);
         },
