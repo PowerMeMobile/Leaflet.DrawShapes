@@ -9,7 +9,7 @@
 
     L.DrawSetShapes = {};
 
-    L.DrawSetShapes.version = '0.0.9';
+    L.DrawSetShapes.version = '0.1.0';
 
     /**
      * Enum with plugin states.
