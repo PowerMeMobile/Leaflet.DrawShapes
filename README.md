@@ -5,7 +5,7 @@ Simple Leaflet plugin for draw different shapes, with edit/clone possibility for
 ---
 
 ### Dependencies
-* [Leaflet](https://github.com/Leaflet/Leaflet/releases) verstion 0.7.3;
+* [Leaflet](https://github.com/Leaflet/Leaflet/releases) verstion 1.7.1;
 * Plugin [Leaflet.draw](https://github.com/Leaflet/Leaflet.draw/releases) version 0.2.4;
 
 ---

@@ -1,6 +1,6 @@
 {
   "name": "powerads-map",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "authors": "pmm",
   "description": "Component for showing map and editing regions for sending",
   "license": "MIT",
@@ -12,7 +12,7 @@
     "tests"
   ],
   "dependencies": {
-    "leaflet": "~0.7.3",
+    "leaflet": "~1.7.1",
     "leaflet.draw": "~0.2.4"
   }
 }
